@@ -6,7 +6,7 @@
 public class MapEntity : MonoBehaviour
 {
     [System.Serializable]
-    public struct Section
+    public class Section
     {
         public GameObject[] obstacles;
     }

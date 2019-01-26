@@ -29,26 +29,27 @@ public class Player : MonoBehaviour
         float horizontalDir = Input.GetAxis("Horizontal_" + playerNumber);
         float verticalDir = Input.GetAxis("Vertical_" + playerNumber);
         Vector3 moveBy = new Vector3(horizontalDir, verticalDir, 0);
+        string boostSuffix = booster.isStarted ? "_boost" : "";
         if (prevMoveBy != moveBy)
         {
             if (moveBy.x == 1f)
             {
-                m_Animator.SetTrigger("move_right");
+                m_Animator.SetTrigger("move_right" + boostSuffix);
             } else if (moveBy.x == -1f)
             {
-                m_Animator.SetTrigger("move_left");
+                m_Animator.SetTrigger("move_left" + boostSuffix);
             }
             else if (moveBy.y == -1f)
             {
-                m_Animator.SetTrigger("move_down");
+                m_Animator.SetTrigger("move_down" + boostSuffix);
             }
             else if (moveBy.y == 1f)
             {
-                m_Animator.SetTrigger("move_up");
+                m_Animator.SetTrigger("move_up" + boostSuffix);
             }
             else
             {
-                m_Animator.SetTrigger("idle");
+                m_Animator.SetTrigger("idle" + boostSuffix);
             }
 
            

@@ -8,12 +8,16 @@ namespace Application
         float initialSpeed;
         public float decayIncreaser = 0.5f;
         public Booster() { }
+        Animator m_Animator;
+
 
         public void boost(Player player)
         {
             isStarted = true;
             initialSpeed = player.movementSpeed;
             player.movementSpeed += boostValue;
+            m_Animator = gameObject.GetComponent<Animator>();
+            m_Animator.SetTrigger("Boost");
         }
         public void decreaseToBoostEnd(Player player)
         {
