@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609dd294ef481206e84098ad7d146498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sections: []
 --- !u!4 &327942988
 Transform:
   m_ObjectHideFlags: 0
@@ -409,10 +410,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 901573fc1936f473fb17887e164b537f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerNumber: 1
+  speed: 0
+  boostValue: 1
   offset: {x: 0, y: -0.51, z: 0}
   bottomRayOffset: {x: 0, y: -0.72, z: 0}
-  ceilingRayOffset: {x: 0, y: -0.31, z: 0}
-  moveBy: {x: 0, y: 0, z: 0}
+  prevMoveBy: {x: 0, y: 0, z: 0}
 --- !u!4 &433712099
 Transform:
   m_ObjectHideFlags: 0

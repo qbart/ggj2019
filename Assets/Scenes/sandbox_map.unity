@@ -290,6 +290,7 @@ MonoBehaviour:
   sections:
   - obstacles:
     - {fileID: 8325143233428446922, guid: 7de960dbee7f4b551ac308bd297dfb58, type: 3}
+    - {fileID: 8325143233428446922, guid: 7de960dbee7f4b551ac308bd297dfb58, type: 3}
 --- !u!1 &1465896895
 GameObject:
   m_ObjectHideFlags: 0
