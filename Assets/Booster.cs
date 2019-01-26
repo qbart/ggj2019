@@ -17,7 +17,6 @@ namespace Application
             initialSpeed = player.movementSpeed;
             player.movementSpeed += boostValue;
             m_Animator = gameObject.GetComponent<Animator>();
-            m_Animator.SetTrigger("Boost");
         }
         public void decreaseToBoostEnd(Player player)
         {
