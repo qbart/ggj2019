@@ -83,12 +83,12 @@ public class Map
         return mesh;
     }
 
-    public Texture2D generateNoiseMap(int seed)
+    public Texture2D generateNoiseMap(int seed, float scale, int octaves, float persistance, float lacunarity)
     {
         var tex = new Texture2D(XN, YN);
         var colors = new Color[XN * YN];
 
-        var data = generateMap(seed);
+        var data = generateMap(seed, scale, octaves, persistance, lacunarity);
 
         for (int y = 0; y < YN; ++y)
         {
@@ -105,13 +105,8 @@ public class Map
         return tex;
     }
 
-    public Data generateMap(int seed)
+    public Data generateMap(int seed, float scale, int octaves, float persistance, float lacunarity)
     {
-        float scale = 2;
-        int octaves = 6;
-        float persistance = 0.6f;
-        float lacunarity = 3.41f;
-
         System.Random prng = new System.Random(seed);
         var samples0 = generateNoise(prng.Next(), scale, octaves, persistance, lacunarity);
         var samples1 = generateNoise(prng.Next(), scale, octaves, persistance, lacunarity);

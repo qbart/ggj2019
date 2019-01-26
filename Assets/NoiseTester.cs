@@ -21,8 +21,8 @@ public class NoiseTester : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // var tex = map.generateNoiseMap(seed, scale, octaves, persistance, lacunarity);
-        var tex = map.generateNoiseMap(seed);
+        var tex = map.generateNoiseMap(seed, scale, octaves, persistance, lacunarity);
+        // var tex = map.generateNoiseMap(seed);
         var renderer = GetComponent<Renderer>();
         renderer.sharedMaterial.mainTexture = tex;
         renderer.transform.localScale = new Vector3(5.2f, 1, 5.2f);
