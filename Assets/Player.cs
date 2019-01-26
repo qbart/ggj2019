@@ -39,7 +39,6 @@ public class Player : MonoBehaviour
         float horizontalDir = Input.GetAxis("Horizontal_" + playerNumber);
         float verticalDir = Input.GetAxis("Vertical_" + playerNumber);
         Vector3 moveBy = new Vector3(horizontalDir, verticalDir, 0);
-      
         if (prevMoveBy != moveBy)
         {
             if (moveBy.x == 1f)
@@ -56,15 +55,13 @@ public class Player : MonoBehaviour
             else if (moveBy.y == 1f)
             {
                 m_Animator.SetTrigger("move_up");
-
-                GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(transform.position.y / 80f) * -1;
             }
             else
             {
                 m_Animator.SetTrigger("idle");
             }
 
-            GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(transform.position.y);
+           
         }
 
         prevMoveBy = moveBy;
@@ -86,6 +83,8 @@ public class Player : MonoBehaviour
            
         }
         transform.Translate(moveBy * movementSpeed * Time.deltaTime);
+        GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(52 - transform.position.y);
+
         decreaseIfBoost();
     }
 

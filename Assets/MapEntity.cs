@@ -42,10 +42,10 @@ public class MapEntity : MonoBehaviour
                 {
                     var collider = tree.GetComponent<BoxCollider2D>();
                     var offset = new Vector3(collider.offset.x, collider.offset.y + collider.size.y / 2, 0);
-                    var pos = new Vector3(mapData.XN - 1 - x + 0.5f, mapData.YN - 1 - y + 0.5f, 0) + map.position - offset;
+                    var pos = new Vector3(x + 0.5f, y + 0.5f, 0) + map.position - offset;
                     var obj = Instantiate(tree, pos, Quaternion.identity);
                     var renderer = obj.GetComponentInChildren<SpriteRenderer>();
-                    renderer.sortingOrder = y;
+                    renderer.sortingOrder = 52 - y;
                 }
             }
     }
