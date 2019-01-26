@@ -3,30 +3,28 @@ namespace Application
 {
     public class Booster : MonoBehaviour
     {
-        public bool boostStarted = false;
-        public float boost = 1;
-        public float initialSpeed = 1;
-        float speed;
+        public bool isStarted = false;
+        public float boostValue = 1.5f;
+        float initialSpeed;
+        public float decayIncreaser = 0.5f;
         public Booster() { }
 
-        public void initBoost(float fromSpeed)
+        public void boost(Player player)
         {
-            boostStarted = true;
-            this.speed = fromSpeed;
-            speed += boost;
+            isStarted = true;
+            initialSpeed = player.movementSpeed;
+            player.movementSpeed += boostValue;
         }
-        public float decreaseToBoostEnd()
+        public void decreaseToBoostEnd(Player player)
         {
-            if (speed <= initialSpeed)
+            if (player.movementSpeed <= initialSpeed)
             {
-                boostStarted = false;
-                speed = initialSpeed;
-                return speed;
+                player.movementSpeed = initialSpeed;
+                isStarted = false;
             }
             else
             {
-                speed -= (Time.deltaTime * 0.3f);
-                return speed;
+                player.movementSpeed -= (Time.deltaTime * decayIncreaser);
             }
         }
     }

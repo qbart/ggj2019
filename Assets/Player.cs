@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
     RaycastHit2D hitter;
 
     public float movementSpeed;
-    public float boostValue = 1;
     public Vector3 offset = new Vector3(0, -0.51f, 0);
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
     public Vector3 prevMoveBy = new Vector3(0, 0, 0);
@@ -22,14 +21,6 @@ public class Player : MonoBehaviour
     {
         m_Animator = gameObject.GetComponent<Animator>();
         direction = Direction.NONE;
-    }
-
-    private void decreaseIfBoost()
-    {  
-        if (booster.boostStarted)
-        {
-            movementSpeed = booster.decreaseToBoostEnd();
-        }
     }
 
     void Update()
@@ -69,9 +60,9 @@ public class Player : MonoBehaviour
         {
             if (hitter.collider.tag == "booster")
             {
-                if (!booster.boostStarted)
+                if (!booster.isStarted)
                 {
-                    booster.initBoost(movementSpeed);
+                    booster.boost(this);
                 }
             }
             else
@@ -82,9 +73,11 @@ public class Player : MonoBehaviour
            
         }
         transform.Translate(moveBy * movementSpeed * Time.deltaTime);
+        if (booster.isStarted)
+        {
+            booster.decreaseToBoostEnd(this);
+        }
         GetComponent<SpriteRenderer>().sortingOrder = (Mathf.RoundToInt(52 - transform.position.y) * 100) + 10 + playerNumber;
-
-        decreaseIfBoost();
     }
 
     void OnDrawGizmos()
