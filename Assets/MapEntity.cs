@@ -24,16 +24,19 @@ public class MapEntity : MonoBehaviour
         map = new Map(52, 52);
         mesh_Filter.mesh = map.generateMesh();
         transform.position = map.position;
-        float[,] grid = map.generateObstacleMap(3874623);
+        var mapData = map.generateMap(38714623);
 
         var tree = sections[0].obstacles[0];
 
-        for (int y = 0; y < 52; ++y)
-            for (int x = 0; x < 52; ++x)
+        for (int y = 0; y < mapData.YN; ++y)
+            for (int x = 0; x < mapData.XN; ++x)
             {
-                if (grid[x, y] == 0)
+                if (mapData.grid[x, y] == 1)
                 {
-                    Instantiate(tree, new Vector3(x, y - 1, 0) + map.position, Quaternion.identity);
+                    var collider = tree.GetComponent<BoxCollider2D>();
+                    var offset = new Vector3(collider.offset.x, collider.offset.y + collider.size.y / 2, 0);
+                    var pos = new Vector3(x + 0.5f, y + 0.5f, 0) + map.position - offset;
+                    Instantiate(tree, pos, Quaternion.identity);
                 }
             }
     }

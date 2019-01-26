@@ -5,14 +5,17 @@ using UnityEngine;
 public class Map
 {
     int YN, XN;
-    float[,] grid;
+
+    public struct Data
+    {
+        public int[,] grid;
+        public int XN, YN;
+    }
 
     public Map(int xn, int yn)
     {
         XN = xn;
         YN = yn;
-
-        grid = new float[XN, YN];
     }
 
     public Vector3 position
@@ -85,14 +88,13 @@ public class Map
         var tex = new Texture2D(XN, YN);
         var colors = new Color[XN * YN];
 
-        generateObstacleMap(seed);
+        var data = generateMap(seed);
 
         for (int y = 0; y < YN; ++y)
         {
             for (int x = 0; x < XN; ++x)
             {
-                colors[y * XN + x] = new Color(grid[x, y], grid[x, y], grid[x, y]);
-
+                colors[y * XN + x] = new Color(1 - data.grid[x, y], 1 - data.grid[x, y], 1 - data.grid[x, y]);
             }
         }
 
@@ -103,30 +105,37 @@ public class Map
         return tex;
     }
 
-    public float[,] generateObstacleMap(int seed)
+    public Data generateMap(int seed)
     {
+        float scale = 2;
+        int octaves = 6;
+        float persistance = 0.6f;
+        float lacunarity = 3.41f;
+
         System.Random prng = new System.Random(seed);
-        grid = generateNoise(prng.Next());
-        var samples = generateNoise(prng.Next());
-        var samples2 = generateNoise(prng.Next());
+        var samples0 = generateNoise(prng.Next(), scale, octaves, persistance, lacunarity);
+        var samples1 = generateNoise(prng.Next(), scale, octaves, persistance, lacunarity);
+        var samples2 = generateNoise(prng.Next(), scale, octaves, persistance, lacunarity);
+
+        Data data;
+        data.grid = new int[XN, YN];
+        data.YN = YN;
+        data.XN = XN;
+
         for (int y = 0; y < YN; ++y)
         {
             for (int x = 0; x < XN; ++x)
             {
-                grid[x, y] = 1 - Mathf.Clamp01(grid[x, y] - samples[x, y] - samples2[x, y]);
+                data.grid[x, y] = (int)Mathf.Clamp01(samples0[x, y] - samples1[x, y] - samples2[x, y]);
             }
         }
 
-        return grid;
+        return data;
     }
 
-    public float[,] generateNoise(int seed = 0, float scale = 50, int octaves = 6, float persistance = 0.6f, float lacunarity = 2)
+    public float[,] generateNoise(int seed, float scale, int octaves, float persistance, float lacunarity)
     {
         var samples = new float[XN, YN];
-        scale = 2;
-        octaves = 6;
-        persistance = 0.6f;
-        lacunarity = 3.41f;
         Vector2 offset = new Vector2(0, 0);
 
         System.Random prng = new System.Random(seed);
