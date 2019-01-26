@@ -45,58 +45,21 @@ public class Player : MonoBehaviour
             else if (moveBy.y == 1f)
             {
                 m_Animator.SetTrigger("move_up");
+
+                GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(transform.position.y / 80f) * -1;
             }
             else
             {
                 m_Animator.SetTrigger("idle");
             }
+
+            GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(transform.position.y);
         }
 
         prevMoveBy = moveBy;
 
-
-        //if (Input.GetKey("left"))
-        //{
-        //    moveBy = Vector3.left;
-        //    direction = Direction.LEFT;
-        //}
-        //else if(Input.GetKey("up"))
-        //{
-        //    moveBy = Vector3.up;
-        //    direction = Direction.UP;
-        //}
-        //else if (Input.GetKey("down"))
-        //{
-        //    moveBy = Vector3.down;
-        //    direction = Direction.DOWN;
-        //}
-        //else
-        //{
-        //    direction = Direction.NONE;
-        //    moveBy = new Vector3(0, 0, 0);
-        //}
         hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy, 0.2f);
-        //if (previousDirection != direction)
-        //{
-        //    switch (direction)
-        //    {
-        //        case Direction.DOWN:
-        //            m_Animator.SetTrigger("move_down");
-        //            break;
-        //        case Direction.UP:
-        //            m_Animator.SetTrigger("move_up");
-        //            break;
-        //        case Direction.LEFT:
-        //            m_Animator.SetTrigger("move_left");
-        //            break;
-        //        case Direction.RIGHT:
-        //            m_Animator.SetTrigger("move_right");
-        //            break;
-        //        case Direction.NONE:
-        //            m_Animator.SetTrigger("idle");
-        //            break;
-        //    }
-        //}
+
         if (hitter.collider != null)
         {
             if (hitter.collider.tag == "booster")
