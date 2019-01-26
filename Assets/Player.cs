@@ -56,11 +56,15 @@ public class Player : MonoBehaviour
             else if (moveBy.y == 1f)
             {
                 m_Animator.SetTrigger("move_up");
+
+                GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(transform.position.y / 80f) * -1;
             }
             else
             {
                 m_Animator.SetTrigger("idle");
             }
+
+            GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(transform.position.y);
         }
 
         prevMoveBy = moveBy;

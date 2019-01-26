@@ -509,7 +509,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609dd294ef481206e84098ad7d146498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sections: []
+  sections:
+  - obstacles:
+    - {fileID: 8325143233428446922, guid: 7de960dbee7f4b551ac308bd297dfb58, type: 3}
 --- !u!4 &1054528196
 Transform:
   m_ObjectHideFlags: 0

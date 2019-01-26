@@ -22,7 +22,7 @@ public class Map
     {
         get
         {
-            return new Vector3(-XN / 2, -YN / 2, 0);
+            return new Vector3(0, 0, 0);
         }
     }
 
