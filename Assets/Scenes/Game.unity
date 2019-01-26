@@ -163,7 +163,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 2
-  speed: 1
+  movementSpeed: 1
+  boostValue: 1
   offset: {x: 0, y: -0.51, z: 0}
   bottomRayOffset: {x: 0, y: -0.72, z: 0}
   prevMoveBy: {x: 0, y: 0, z: 0}
@@ -321,9 +322,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 972321224}
-  - component: {fileID: 972321222}
   - component: {fileID: 972321223}
   - component: {fileID: 972321225}
+  - component: {fileID: 972321222}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -344,7 +345,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 1
-  speed: 1.2
+  movementSpeed: 1.5
+  boostValue: 1
   offset: {x: 0, y: -0.51, z: 0}
   bottomRayOffset: {x: 0, y: -0.72, z: 0}
   prevMoveBy: {x: 0, y: 0, z: 0}
