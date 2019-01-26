@@ -4,15 +4,17 @@ using System.Threading.Tasks;
 public class Player : MonoBehaviour
 {
     Animator m_Animator;
+    public int playerNumber;
+    public float speed;
     enum Direction { NONE, LEFT, UP, RIGHT, DOWN };
 
     Direction direction;
     RaycastHit2D hitter;
     RaycastHit2D hitter2;
-    static float speed = 1;
+   
     public Vector3 offset = new Vector3(0, -0.51f, 0);
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
-    public Vector3 moveBy = new Vector3(0, 0, 0);
+    public Vector3 prevMoveBy = new Vector3(0, 0, 0);
 
     private void Start()
     {
@@ -23,54 +25,78 @@ public class Player : MonoBehaviour
     void Update()
     {
         Direction previousDirection = direction;
-
-        if(Input.GetKey("right"))
+        float horizontalDir = Input.GetAxis("Horizontal_" + playerNumber);
+        float verticalDir = Input.GetAxis("Vertical_" + playerNumber);
+        Vector3 moveBy = new Vector3(horizontalDir, verticalDir, 0);
+      
+        if (prevMoveBy != moveBy)
         {
-            moveBy = Vector3.right;
-            direction = Direction.RIGHT;
-        }
-        else if (Input.GetKey("left"))
-        {
-            moveBy = Vector3.left;
-            direction = Direction.LEFT;
-        }
-        else if(Input.GetKey("up"))
-        {
-            moveBy = Vector3.up;
-            direction = Direction.UP;
-        }
-        else if (Input.GetKey("down"))
-        {
-            moveBy = Vector3.down;
-            direction = Direction.DOWN;
-        }
-        else
-        {
-            direction = Direction.NONE;
-            moveBy = new Vector3(0, 0, 0);
-        }
-        hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy, 0.2f);
-        if (previousDirection != direction)
-        {
-            switch (direction)
+            if (moveBy.x == 1f)
             {
-                case Direction.DOWN:
-                    m_Animator.SetTrigger("move_down");
-                    break;
-                case Direction.UP:
-                    m_Animator.SetTrigger("move_up");
-                    break;
-                case Direction.LEFT:
-                    m_Animator.SetTrigger("move_left");
-                    break;
-                case Direction.RIGHT:
-                    m_Animator.SetTrigger("move_right");
-                    break;
-                case Direction.NONE:
-                    m_Animator.SetTrigger("idle");
-                    break;
+                m_Animator.SetTrigger("move_right");
+            } else if (moveBy.x == -1f)
+            {
+                m_Animator.SetTrigger("move_left");
+            }
+            else if (moveBy.y == -1f)
+            {
+                m_Animator.SetTrigger("move_down");
+            }
+            else if (moveBy.y == 1f)
+            {
+                m_Animator.SetTrigger("move_up");
+            }
+            else
+            {
+                m_Animator.SetTrigger("idle");
             }
         }
+
+        prevMoveBy = moveBy;
+
+
+        //if (Input.GetKey("left"))
+        //{
+        //    moveBy = Vector3.left;
+        //    direction = Direction.LEFT;
+        //}
+        //else if(Input.GetKey("up"))
+        //{
+        //    moveBy = Vector3.up;
+        //    direction = Direction.UP;
+        //}
+        //else if (Input.GetKey("down"))
+        //{
+        //    moveBy = Vector3.down;
+        //    direction = Direction.DOWN;
+        //}
+        //else
+        //{
+        //    direction = Direction.NONE;
+        //    moveBy = new Vector3(0, 0, 0);
+        //}
+        hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy, 0.2f);
+        //if (previousDirection != direction)
+        //{
+        //    switch (direction)
+        //    {
+        //        case Direction.DOWN:
+        //            m_Animator.SetTrigger("move_down");
+        //            break;
+        //        case Direction.UP:
+        //            m_Animator.SetTrigger("move_up");
+        //            break;
+        //        case Direction.LEFT:
+        //            m_Animator.SetTrigger("move_left");
+        //            break;
+        //        case Direction.RIGHT:
+        //            m_Animator.SetTrigger("move_right");
+        //            break;
+        //        case Direction.NONE:
+        //            m_Animator.SetTrigger("idle");
+        //            break;
+        //    }
+        //}
         if (hitter.collider != null)
         {
             if (hitter.collider.tag == "booster")

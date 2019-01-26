@@ -121,9 +121,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 87172847}
-  - component: {fileID: 87172846}
   - component: {fileID: 87172848}
   - component: {fileID: 87172845}
+  - component: {fileID: 87172846}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Untagged
@@ -159,11 +159,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 87172844}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fff6d31d82f742e788c04cf1a879b62, type: 3}
+  m_Script: {fileID: 11500000, guid: 901573fc1936f473fb17887e164b537f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerNumber: 2
+  speed: 1
   offset: {x: 0, y: -0.51, z: 0}
   bottomRayOffset: {x: 0, y: -0.72, z: 0}
+  prevMoveBy: {x: 0, y: 0, z: 0}
 --- !u!4 &87172847
 Transform:
   m_ObjectHideFlags: 0
@@ -173,7 +176,7 @@ Transform:
   m_GameObject: {fileID: 87172844}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children:
   - {fileID: 844448160}
   m_Father: {fileID: 0}
@@ -340,8 +343,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 901573fc1936f473fb17887e164b537f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerNumber: 1
+  speed: 1.2
   offset: {x: 0, y: -0.51, z: 0}
   bottomRayOffset: {x: 0, y: -0.72, z: 0}
+  prevMoveBy: {x: 0, y: 0, z: 0}
 --- !u!212 &972321223
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -399,7 +405,7 @@ Transform:
   m_GameObject: {fileID: 972321221}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.197, y: 0.132, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children:
   - {fileID: 1839927116}
   m_Father: {fileID: 0}
@@ -503,6 +509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609dd294ef481206e84098ad7d146498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sections: []
 --- !u!4 &1054528196
 Transform:
   m_ObjectHideFlags: 0
