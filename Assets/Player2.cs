@@ -9,6 +9,7 @@ public class Player2 : MonoBehaviour
     Direction direction;
     public Vector3 offset = new Vector3(0, -0.51f, 0);
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
+    public Vector3 moveBy = new Vector3(0, 0, 0);
 
     private void Start()
     {
@@ -19,39 +20,41 @@ public class Player2 : MonoBehaviour
     void Update()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position + bottomRayOffset, Vector2.right, 0.2f);
+
+        Direction previousDirection = direction;
+
+        if (Input.GetKey("d"))
+        {
+            moveBy = Vector3.right;
+            direction = Direction.RIGHT;
+        }
+        else if (Input.GetKey("a"))
+        {
+            moveBy = Vector3.left;
+            direction = Direction.LEFT;
+        }
+        else if (Input.GetKey("w"))
+        {
+            moveBy = Vector3.up;
+            direction = Direction.UP;
+        }
+        else if (Input.GetKey("s"))
+        {
+            moveBy = Vector3.down;
+            direction = Direction.DOWN;
+        }
+        else
+        {
+            direction = Direction.NONE;
+        }
+
         if (hit.collider != null)
         {
             //Display the point in world space where the ray hit the collider's surface.
             Debug.DrawRay(transform.position + bottomRayOffset, transform.TransformDirection(Vector3.right) * hit.distance, Color.yellow, 5);
             Debug.Log(hit.point);
             Debug.Log("HIT");
-        }
-
-        Direction previousDirection = direction;
-
-        if (Input.GetKey("d"))
-        {
-            transform.Translate(Vector3.right * Time.deltaTime);
-            direction = Direction.RIGHT;
-        }
-        else if (Input.GetKey("a"))
-        {
-            transform.Translate(Vector3.left * Time.deltaTime);
-            direction = Direction.LEFT;
-        }
-        else if (Input.GetKey("w"))
-        {
-            transform.Translate(Vector3.up * Time.deltaTime);
-            direction = Direction.UP;
-        }
-        else if (Input.GetKey("s"))
-        {
-            transform.Translate(Vector3.down * Time.deltaTime);
-            direction = Direction.DOWN;
-        }
-        else
-        {
-            direction = Direction.NONE;
+            moveBy = new Vector3(0, 0, 0);
         }
 
         if (previousDirection != direction)
@@ -75,6 +78,7 @@ public class Player2 : MonoBehaviour
                     break;
             }
         }
+        transform.Translate(moveBy * Time.deltaTime);
     }
 
     void OnDrawGizmos()

@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
+using System.Threading.Tasks;
 
 public class Player : MonoBehaviour
 {
     Animator m_Animator;
-
     enum Direction { NONE, LEFT, UP, RIGHT, DOWN };
 
     Direction direction;
+    RaycastHit2D hitter;
+    RaycastHit2D hitter2;
+    static float speed = 1;
     public Vector3 offset = new Vector3(0, -0.51f, 0);
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
+    public Vector3 moveBy = new Vector3(0, 0, 0);
 
     private void Start()
     {
@@ -18,44 +22,37 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + bottomRayOffset, Vector2.right, 0.2f);
-        if (hit.collider != null)
-        {
-            //Display the point in world space where the ray hit the collider's surface.
-            Debug.DrawRay(transform.position + bottomRayOffset, transform.TransformDirection(Vector3.right) * hit.distance, Color.yellow, 5);
-            Debug.Log(hit.point);
-            Debug.Log("HIT");
-        }
         Direction previousDirection = direction;
 
         if(Input.GetKey("right"))
         {
-            transform.Translate(Vector3.right * Time.deltaTime);
+            moveBy = Vector3.right;
             direction = Direction.RIGHT;
         }
         else if (Input.GetKey("left"))
         {
-            transform.Translate(Vector3.left * Time.deltaTime);
+            moveBy = Vector3.left;
             direction = Direction.LEFT;
         }
         else if(Input.GetKey("up"))
         {
-            transform.Translate(Vector3.up * Time.deltaTime);
+            moveBy = Vector3.up;
             direction = Direction.UP;
         }
         else if (Input.GetKey("down"))
         {
-            transform.Translate(Vector3.down * Time.deltaTime);
+            moveBy = Vector3.down;
             direction = Direction.DOWN;
         }
         else
         {
             direction = Direction.NONE;
+            moveBy = new Vector3(0, 0, 0);
         }
-
+        hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy, 0.2f);
         if (previousDirection != direction)
         {
-            switch(direction)
+            switch (direction)
             {
                 case Direction.DOWN:
                     m_Animator.SetTrigger("move_down");
@@ -74,7 +71,29 @@ public class Player : MonoBehaviour
                     break;
             }
         }
+        if (hitter.collider != null)
+        {
+            if (hitter.collider.tag == "booster")
+            {
+                speed = 2;
+                Task.Delay(2000).ContinueWith((t) =>
+                {
+                    speed = 1;
+                });
+            }
+            else
+            {
+                moveBy = new Vector3(0, 0, 0);
+                //Display the point in world space where the ray hit the collider's surface.
+                Debug.DrawRay(transform.position + bottomRayOffset, transform.TransformDirection(Vector3.right) * hitter.distance, Color.yellow, 5);
+                Debug.Log(hitter.collider.tag);
+                Debug.Log("HIT");
+            }
+           
+        }
+        transform.Translate(moveBy * speed * Time.deltaTime);
     }
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
