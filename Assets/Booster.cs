@@ -3,31 +3,59 @@ namespace Application
 {
     public class Booster : MonoBehaviour
     {
-        public bool isStarted = false;
-        public float boostValue = 1.5f;
-        float initialSpeed;
-        public float decayIncreaser = 0.5f;
-        public Booster() { }
-        Animator m_Animator;
+        public float effectTime = 2f;
+        public float maxDecayTime = 1f;
+        [Range(0, 1)]
+        public float decayValue = 0.8f;
+        public float speedBoost = 1.5f;
 
+        bool running;
+        float timer, decayTimer;
+        float speed;
 
-        public void boost(Player player)
+        public bool isStarted
         {
-            isStarted = true;
-            initialSpeed = player.movementSpeed;
-            player.movementSpeed += boostValue;
-            m_Animator = gameObject.GetComponent<Animator>();
-        }
-        public void decreaseToBoostEnd(Player player)
-        {
-            if (player.movementSpeed <= initialSpeed)
+            get
             {
-                player.movementSpeed = initialSpeed;
-                isStarted = false;
+                return running;
             }
-            else
+        }
+
+        public float currentSpeed
+        {
+            get
             {
-                player.movementSpeed -= (Time.deltaTime * decayIncreaser);
+                return running ? speed : 0;
+            }
+        }
+
+        public void boost()
+        {
+            running = true;
+            timer = effectTime;
+            decayTimer = maxDecayTime;
+            speed = speedBoost;
+        }
+
+        void Start()
+        {
+            running = false;
+        }
+
+        void Update()
+        {
+            if (running)
+            {
+                timer -= Time.deltaTime;
+
+                if (timer <= 0)
+                {
+                    decayTimer -= Time.deltaTime;
+                    speed *= decayValue;
+
+                    if (decayTimer <= 0 || speed <= 0)
+                        running = false;
+                }
             }
         }
     }

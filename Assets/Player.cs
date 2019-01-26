@@ -1,58 +1,63 @@
 ﻿using Application;
 using UnityEngine;
+[RequireComponent(typeof(Booster))]
 
 
 public class Player : MonoBehaviour
 {
     Animator m_Animator;
     public int playerNumber;
-    enum Direction { NONE, LEFT, UP, RIGHT, DOWN };
 
-    Direction direction;
     RaycastHit2D hitter;
 
     public float movementSpeed;
     public Vector3 offset = new Vector3(0, -0.51f, 0);
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
-    public Vector3 prevMoveBy = new Vector3(0, 0, 0);
-    Booster booster = new Booster();
+    public Vector3 prevMoveBy = Vector3.zero;
+    Booster booster;
+    Vector3 moveBy;
 
     private void Start()
     {
+        booster = GetComponent<Booster>();
         m_Animator = gameObject.GetComponent<Animator>();
-        direction = Direction.NONE;
+        moveBy = Vector3.zero;
+    }
+
+    void UpdateAnimations()
+    {
+        string boostSuffix = booster.isStarted ? "_boost" : "";
+        if (moveBy.x == 1f)
+        {
+            m_Animator.SetTrigger("move_right" + boostSuffix);
+        }
+        else if (moveBy.x == -1f)
+        {
+            m_Animator.SetTrigger("move_left" + boostSuffix);
+        }
+        else if (moveBy.y == -1f)
+        {
+            m_Animator.SetTrigger("move_down" + boostSuffix);
+        }
+        else if (moveBy.y == 1f)
+        {
+            m_Animator.SetTrigger("move_up" + boostSuffix);
+        }
+        else
+        {
+            m_Animator.SetTrigger("idle" + boostSuffix);
+        }
     }
 
     void Update()
     {
-        Direction previousDirection = direction;
         float horizontalDir = Input.GetAxis("Horizontal_" + playerNumber);
         float verticalDir = Input.GetAxis("Vertical_" + playerNumber);
-        Vector3 moveBy = new Vector3(horizontalDir, verticalDir, 0);
-        string boostSuffix = booster.isStarted ? "_boost" : "";
+        moveBy = new Vector3(horizontalDir, verticalDir, 0);
+       
         if (prevMoveBy != moveBy)
         {
-            if (moveBy.x == 1f)
-            {
-                m_Animator.SetTrigger("move_right" + boostSuffix);
-            } else if (moveBy.x == -1f)
-            {
-                m_Animator.SetTrigger("move_left" + boostSuffix);
-            }
-            else if (moveBy.y == -1f)
-            {
-                m_Animator.SetTrigger("move_down" + boostSuffix);
-            }
-            else if (moveBy.y == 1f)
-            {
-                m_Animator.SetTrigger("move_up" + boostSuffix);
-            }
-            else
-            {
-                m_Animator.SetTrigger("idle" + boostSuffix);
-            }
-
-           
+            UpdateAnimations();
         }
 
         prevMoveBy = moveBy;
@@ -63,21 +68,18 @@ public class Player : MonoBehaviour
             {
                 if (!booster.isStarted)
                 {
-                    booster.boost(this);
+                    booster.boost();
+                    UpdateAnimations();
                 }
             }
             else
             {
-                moveBy = new Vector3(0, 0, 0);
+                moveBy = Vector3.zero;
                 Debug.DrawRay(transform.position + bottomRayOffset, transform.TransformDirection(Vector3.right) * hitter.distance, Color.yellow, 5);
             }
            
         }
-        transform.Translate(moveBy * movementSpeed * Time.deltaTime);
-        if (booster.isStarted)
-        {
-            booster.decreaseToBoostEnd(this);
-        }
+        transform.Translate(moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime);
         GetComponent<SpriteRenderer>().sortingOrder = (Mathf.RoundToInt(52 - transform.position.y) * 100) + 10 + playerNumber;
     }
 
