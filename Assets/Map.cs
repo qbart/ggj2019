@@ -209,128 +209,169 @@ public class Map
         {
             int s = shuffledType[i];
 
+            var frames = new List<int>();
+
             for (int y = 0; y < YN; ++y)
                 for (int x = 0; x < XN; ++x)
                 {
                     if (samples[x, y] == s)
                         continue;
 
-                    float frame = -1;
                     Matrix mat = samples.around(x, y, s);
 
                     if (mat.matches(
                         0, 0, 0,
                         1, 0, 1,
                         1, 1, 1
-                    )) frame = 16;
+                    )) frames.Add(16);
                     else if (mat.matches(
                         1, 1, 0,
                         1, 0, 0,
                         1, 1, 0
-                    )) frame = 17;
+                    )) frames.Add(17);
                     else if (mat.matches(
                         1, 1, 1,
                         1, 0, 1,
                         0, 0, 0
-                    )) frame = 18;
+                    )) frames.Add(18);
                     else if (mat.matches(
                         0, 1, 1,
                         0, 0, 1,
                         0, 1, 1
-                    )) frame = 19;
+                    )) frames.Add(19);
 
                     else if (mat.matches(
                         0, 0, 0,
                         0, 0, 1,
                         0, 1, 1
-                    )) frame = 13;
+                    )) frames.Add(13);
                     else if (mat.matches(
                         0, 0, 0,
                         1, 0, 0,
                         1, 1, 0
-                    )) frame = 12;
+                    )) frames.Add(12);
                     else if (mat.matches(
                         1, 1, 0,
                         1, 0, 0,
                         0, 0, 0
-                    )) frame = 15;
+                    )) frames.Add(15);
                     else if (mat.matches(
                         0, 1, 1,
                         0, 0, 1,
                         0, 0, 0
-                    )) frame = 14;
+                    )) frames.Add(14);
 
                     else if (mat.matches(
                         0, 0, 0,
                         1, 0, 0,
                         0, 0, 0
-                    )) frame = 8;
+                    )) frames.Add(8);
                     else if (mat.matches(
                         0, 1, 0,
                         0, 0, 0,
                         0, 0, 0
-                    )) frame = 11;
+                    )) frames.Add(11);
                     else if (mat.matches(
                         0, 0, 0,
                         0, 0, 1,
                         0, 0, 0
-                    )) frame = 10;
+                    )) frames.Add(10);
                     else if (mat.matches(
                         0, 0, 0,
                         0, 0, 0,
                         0, 1, 0
-                    )) frame = 9;
+                    )) frames.Add(9);
+
+                    else if (mat.matches(
+                        1, 0, 1,
+                        0, 0, 0,
+                        0, 0, 0
+                    ))
+                    {
+                        frames.Add(7);
+                        frames.Add(6);
+                    }
+                    else if (mat.matches(
+                        0, 0, 1,
+                        0, 0, 0,
+                        0, 0, 1
+                    ))
+                    {
+                        frames.Add(6);
+                        frames.Add(5);
+                    }
+                    else if (mat.matches(
+                        0, 0, 0,
+                        0, 0, 0,
+                        1, 0, 1
+                    ))
+                    {
+                        frames.Add(4);
+                        frames.Add(5);
+                    }
+                    else if (mat.matches(
+                        1, 0, 0,
+                        0, 0, 0,
+                        1, 0, 0
+                    ))
+                    {
+                        frames.Add(7);
+                        frames.Add(4);
+                    }
 
                     else if (mat.matches(
                         1, 0, 0,
                         0, 0, 0,
                         0, 0, 0
-                    )) frame = 7;
+                    )) frames.Add(7);
                     else if (mat.matches(
                         0, 0, 1,
                         0, 0, 0,
                         0, 0, 0
-                    )) frame = 6;
+                    )) frames.Add(6);
                     else if (mat.matches(
                         0, 0, 0,
                         0, 0, 0,
                         0, 0, 1
-                    )) frame = 5;
+                    )) frames.Add(5);
                     else if (mat.matches(
                         0, 0, 0,
                         0, 0, 0,
                         1, 0, 0
-                    )) frame = 4;
+                    )) frames.Add(4);
 
-
-                    if (frame != -1)
+                    if (frames.Count >= 0)
                     {
-                        verts.Add(new Vector3(x, y));
-                        verts.Add(new Vector3(x + 1, y));
-                        verts.Add(new Vector3(x, y + 1));
-                        verts.Add(new Vector3(x + 1, y + 1));
+                        foreach (var frame in frames)
+                        {
+                            verts.Add(new Vector3(x, y));
+                            verts.Add(new Vector3(x + 1, y));
+                            verts.Add(new Vector3(x, y + 1));
+                            verts.Add(new Vector3(x + 1, y + 1));
 
-                        // tri 0
-                        tris[s].Add(offset + 0);
-                        tris[s].Add(offset + 2);
-                        tris[s].Add(offset + 1);
+                            // tri 0
+                            tris[s].Add(offset + 0);
+                            tris[s].Add(offset + 2);
+                            tris[s].Add(offset + 1);
 
-                        // tri 1
-                        tris[s].Add(offset + 1);
-                        tris[s].Add(offset + 2);
-                        tris[s].Add(offset + 3);
+                            // tri 1
+                            tris[s].Add(offset + 1);
+                            tris[s].Add(offset + 2);
+                            tris[s].Add(offset + 3);
 
-                        int frameY = (int)frame / valuesX.Length;
-                        int frameX = (int)frame % valuesX.Length;
+                            int frameY = (int)frame / valuesX.Length;
+                            int frameX = (int)frame % valuesX.Length;
 
-                        uvs.Add(new Vector2(0          + valuesX[frameX], 0          + valuesY[valuesY.Length - 1 - frameY]));
-                        uvs.Add(new Vector2(valuesX[1] + valuesX[frameX], 0          + valuesY[valuesY.Length - 1 - frameY]));
-                        uvs.Add(new Vector2(0          + valuesX[frameX], valuesY[1] + valuesY[valuesY.Length - 1 - frameY]));
-                        uvs.Add(new Vector2(valuesX[1] + valuesX[frameX], valuesY[1] + valuesY[valuesY.Length - 1 - frameY]));
+                            uvs.Add(new Vector2(0 + valuesX[frameX], 0 + valuesY[valuesY.Length - 1 - frameY]));
+                            uvs.Add(new Vector2(valuesX[1] + valuesX[frameX], 0 + valuesY[valuesY.Length - 1 - frameY]));
+                            uvs.Add(new Vector2(0 + valuesX[frameX], valuesY[1] + valuesY[valuesY.Length - 1 - frameY]));
+                            uvs.Add(new Vector2(valuesX[1] + valuesX[frameX], valuesY[1] + valuesY[valuesY.Length - 1 - frameY]));
 
-                        offset += 4;
-
+                            offset += 4;
+                        }
                     }
+
+                    frames.Clear();
                 }
 
         }

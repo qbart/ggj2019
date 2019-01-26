@@ -20,7 +20,7 @@ public class MapEntity : MonoBehaviour
         MeshRenderer mesh_Renderer = GetComponent<MeshRenderer>();
         MeshFilter mesh_Filter = GetComponent<MeshFilter>();
         map = new Map(52, 52);
-        Map.Level level = map.generateLevel(38729148);
+        Map.Level level = map.generateLevel(4232148);
         mesh_Filter.mesh = level.mesh;
         transform.position = map.position;
 
