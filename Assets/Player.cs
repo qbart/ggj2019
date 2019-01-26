@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     enum Direction { NONE, LEFT, UP, RIGHT, DOWN };
 
     Direction direction;
+    public Vector3 offset = new Vector3(0, -0.51f, 0);
+    public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
 
     private void Start()
     {
@@ -16,6 +18,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + bottomRayOffset, Vector2.right, 0.2f);
+        if (hit.collider != null)
+        {
+            //Display the point in world space where the ray hit the collider's surface.
+            Debug.DrawRay(transform.position + bottomRayOffset, transform.TransformDirection(Vector3.right) * hit.distance, Color.yellow, 5);
+            Debug.Log(hit.point);
+            Debug.Log("HIT");
+        }
         Direction previousDirection = direction;
 
         if(Input.GetKey("right"))
@@ -64,5 +74,10 @@ public class Player : MonoBehaviour
                     break;
             }
         }
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(transform.position + offset, new Vector3(0.2f, 0.4f, 0.2f));
     }
 }
