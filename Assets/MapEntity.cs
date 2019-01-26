@@ -31,13 +31,14 @@ public class MapEntity : MonoBehaviour
 
         var mapData = map.generateObjects(38714623, new Map.Range[0], scale, octaves, persistance, lacunarity);
 
-        var obstaclesLength = sections[0].obstacles.Length;
-        var obstacles = sections[0].obstacles;
-
         int zindex = 0;
         for (int y = 0; y < mapData.YN; ++y)
             for (int x = 0; x < mapData.XN; ++x)
             {
+                var section = (int)level.data.grid[x, y];
+                var obstaclesLength = sections[section].obstacles.Length;
+                var obstacles = sections[section].obstacles;
+
                 int obstacleIndex = Random.Range(0, obstaclesLength);
                 var obstacle = obstacles[obstacleIndex];
                 if (mapData.grid[x, y] == 1)
