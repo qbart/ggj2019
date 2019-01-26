@@ -514,6 +514,19 @@ MonoBehaviour:
   sections:
   - obstacles:
     - {fileID: 8325143233428446922, guid: 7de960dbee7f4b551ac308bd297dfb58, type: 3}
+    - {fileID: 8325143233428446922, guid: 7f828028d587a465f89a6b6ec0b05af0, type: 3}
+    - {fileID: 8325143233428446922, guid: 81fad17c15e90407898908bd71686f74, type: 3}
+    - {fileID: 8325143233428446922, guid: 103554c288e90462b8c01bd12f515d2d, type: 3}
+    - {fileID: 8325143233428446922, guid: 95305b2d962d44b5685a009111cb1645, type: 3}
+    - {fileID: 8325143233428446922, guid: 4f74f4353851c4f4b88569dcedf9b7ec, type: 3}
+    - {fileID: 8325143233428446922, guid: 9d8ee9d3492c0451d94756fe9d8a3531, type: 3}
+    - {fileID: 8325143233428446922, guid: ff5961ca0695840b28c9064d0669a3b7, type: 3}
+    - {fileID: 8325143233428446922, guid: ef894e7bca5d540de88dc745006dbba3, type: 3}
+    - {fileID: 8325143233428446922, guid: eef6e7b02d8174d948337a4495107e78, type: 3}
+    - {fileID: 8325143233428446922, guid: e2c5ba7059bc645e9937fa439b61fa00, type: 3}
+    - {fileID: 8325143233428446922, guid: ebd2b31ee262e42ee9a75bbd8cb264c6, type: 3}
+    - {fileID: 8325143233428446922, guid: c4229bf4b78c444bc80ed884e01af24b, type: 3}
+    - {fileID: 8325143233428446922, guid: 9213945969f75487fb18621a0069c046, type: 3}
 --- !u!4 &1054528196
 Transform:
   m_ObjectHideFlags: 0
