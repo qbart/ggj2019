@@ -1,17 +1,14 @@
 ﻿using UnityEngine;
 namespace Application
 {
-    public class Booster
+    public class Booster : MonoBehaviour
     {
         public bool boostStarted = false;
         public float boost = 1;
-        public float speed;
-        float initialSpeed;
+        public float initialSpeed = 1;
+        float speed;
+        public Booster() { }
 
-        public Booster(float initialSpeed)
-        {
-            this.initialSpeed = initialSpeed;
-        }
         public void initBoost(float fromSpeed)
         {
             boostStarted = true;
