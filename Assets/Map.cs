@@ -6,10 +6,100 @@ public class Map
 {
     int YN, XN;
 
+    public class Level
+    {
+        public Mesh mesh;
+        public Data data;
+    }
+
+    public class Matrix
+    {
+        public int[] v;
+
+        public Matrix(
+            int v1 = 0, int v2 = 0, int v3 = 0,
+            int v4 = 0, int v5 = 0, int v6 = 0,
+            int v7 = 0, int v8 = 0, int v9 = 0
+            )
+        {
+            v = new int[9] {
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0
+            };
+
+            v[0] = v1;
+            v[1] = v2;
+            v[2] = v3;
+            v[3] = v4;
+            v[4] = v5;
+            v[5] = v6;
+            v[6] = v7;
+            v[7] = v8;
+            v[8] = v9;
+        }
+
+
+        public bool matches(
+            int v1 = 0, int v2 = 0, int v3 = 0,
+            int v4 = 0, int v5 = 0, int v6 = 0,
+            int v7 = 0, int v8 = 0, int v9 = 0)
+        {
+            var tmp = new Matrix();
+            tmp.v[0] = v1;
+            tmp.v[1] = v2;
+            tmp.v[2] = v3;
+            tmp.v[3] = v4;
+            tmp.v[4] = v5;
+            tmp.v[5] = v6;
+            tmp.v[6] = v7;
+            tmp.v[7] = v8;
+            tmp.v[8] = v9;
+
+
+
+            for (int i = 0; i < v.Length; ++i)
+                if (tmp.v[i] == 1 && tmp.v[i] != v[i])
+                    return false;
+
+            return true;
+        }
+    }
+
     public struct Data
     {
         public float[,] grid;
         public int XN, YN;
+
+        public float this[int x, int y]
+        {
+            get
+            {
+                if (x < 0 || x >= XN || y < 0 || y >= YN)
+                    return -1;
+
+                return grid[x, y];
+            }
+        }
+
+        public Matrix around(int x, int y, int s)
+        {
+            var mat = new Matrix();
+
+            mat.v[0] = this[x - 1, y + 1] == s ? 1 : 0;
+            mat.v[1] = this[x, y + 1] == s ? 1 : 0;
+            mat.v[2] = this[x + 1, y + 1] == s ? 1 : 0;
+
+            mat.v[3] = this[x - 1, y] == s ? 1 : 0;
+            mat.v[4] = this[x, y] == s ? 1 : 0;
+            mat.v[5] = this[x + 1, y] == s ? 1 : 0;
+
+            mat.v[6] = this[x - 1, y - 1] == s ? 1 : 0;
+            mat.v[7] = this[x, y - 1] == s ? 1 : 0;
+            mat.v[8] = this[x + 1, y - 1] == s ? 1 : 0;
+
+            return mat;
+        }
     }
 
     [System.Serializable]
@@ -46,8 +136,10 @@ public class Map
         }
     }
 
-    public Mesh generateMesh(int seed)
+    public Level generateLevel(int seed)
     {
+        Level level = new Level();
+
         float[] values = { 0, 0.25f, 0.5f, 0.75f };
         var verts = new List<Vector3>();
         List<int>[] tris = {
@@ -103,13 +195,122 @@ public class Map
                 tris[section].Add(offset + 2);
                 tris[section].Add(offset + 3);
 
-                uvs.Add(new Vector2(0 + values[typeX], 0));
-                uvs.Add(new Vector2(0.25f + values[typeX], 0));
+                uvs.Add(new Vector2(0 + values[typeX], 0.75f));
+                uvs.Add(new Vector2(0.25f + values[typeX], 0.75f));
                 uvs.Add(new Vector2(0 + values[typeX], 1));
                 uvs.Add(new Vector2(0.25f + values[typeX], 1));
 
                 offset += 4;
             }
+        }
+
+        for (int i = 0; i < shuffledType.Length; ++i)
+        {
+            int s = shuffledType[i];
+
+            for (int y = 0; y < YN; ++y)
+                for (int x = 0; x < XN; ++x)
+                {
+                    if (samples[x, y] == s)
+                        continue;
+
+                    float frame = -1;
+                    Matrix mat = samples.around(x, y, s);
+
+                    if (mat.matches(
+                        0, 0, 0,
+                        0, 0, 1,
+                        0, 1, 1
+                    )) frame = 13;
+                    else if (mat.matches(
+                        0, 0, 0,
+                        1, 0, 0,
+                        1, 1, 0
+                    )) frame = 12;
+                    else if (mat.matches(
+                        1, 1, 0,
+                        1, 0, 0,
+                        0, 0, 0
+                    )) frame = 15;
+                    else if (mat.matches(
+                        0, 1, 1,
+                        0, 0, 1,
+                        0, 0, 0
+                    )) frame = 14;
+
+                    else if (mat.matches(
+                        0, 0, 0,
+                        1, 0, 0,
+                        0, 0, 0
+                    )) frame = 8;
+                    else if (mat.matches(
+                        0, 1, 0,
+                        0, 0, 0,
+                        0, 0, 0
+                    )) frame = 11;
+                    else if (mat.matches(
+                        0, 0, 0,
+                        0, 0, 1,
+                        0, 0, 0
+                    )) frame = 10;
+                    else if (mat.matches(
+                        0, 0, 0,
+                        0, 0, 0,
+                        0, 1, 0
+                    )) frame = 9;
+
+                    else if (mat.matches(
+                        1, 0, 0,
+                        0, 0, 0,
+                        0, 0, 0
+                    )) frame = 7;
+                    else if (mat.matches(
+                        0, 0, 1,
+                        0, 0, 0,
+                        0, 0, 0
+                    )) frame = 6;
+                    else if (mat.matches(
+                        0, 0, 0,
+                        0, 0, 0,
+                        0, 0, 1
+                    )) frame = 5;
+                    else if (mat.matches(
+                        0, 0, 0,
+                        0, 0, 0,
+                        1, 0, 0
+                    )) frame = 4;
+
+
+                    if (frame != -1)
+                    {
+                        verts.Add(new Vector3(x, y, -5));
+                        verts.Add(new Vector3(x + 1, y, -5));
+                        verts.Add(new Vector3(x, y + 1, -5));
+                        verts.Add(new Vector3(x + 1, y + 1, -5));
+
+                        // tri 0
+                        tris[s].Add(offset + 0);
+                        tris[s].Add(offset + 2);
+                        tris[s].Add(offset + 1);
+
+                        // tri 1
+                        tris[s].Add(offset + 1);
+                        tris[s].Add(offset + 2);
+                        tris[s].Add(offset + 3);
+
+                        int frameX = (int)frame % 4;
+                        int frameY = (int)frame / 4;
+
+                        uvs.Add(new Vector2(0 + values[frameX], 0 + values[3 - frameY]));
+                        uvs.Add(new Vector2(0.25f + values[frameX], 0 + values[3 - frameY]));
+                        uvs.Add(new Vector2(0 + values[frameX], 0.25f + values[3 - frameY]));
+                        uvs.Add(new Vector2(0.25f + values[frameX], 0.25f + values[3 - frameY]));
+
+                        offset += 4;
+
+                    }
+                }
+
         }
 
         Mesh mesh = new Mesh();
@@ -118,7 +319,11 @@ public class Map
         for (int i = 0; i < 4; ++i)
             mesh.SetTriangles(tris[i], i);
         mesh.uv = uvs.ToArray();
-        return mesh;
+
+        level.mesh = mesh;
+        level.data = samples;
+
+        return level;
     }
 
     public Data smoothMap(Range[] ranges, Data data)
@@ -171,7 +376,7 @@ public class Map
         return samples0;
     }
 
-    public Data generateMap(int seed, Range[] ranges, float scale, int octaves, float persistance, float lacunarity)
+    public Data generateObjects(int seed, Range[] ranges, float scale, int octaves, float persistance, float lacunarity)
     {
         System.Random prng = new System.Random(seed);
         var samples0 = generateNoise(prng.Next(), ranges, scale, octaves, persistance, lacunarity);

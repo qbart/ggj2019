@@ -20,7 +20,8 @@ public class MapEntity : MonoBehaviour
         MeshRenderer mesh_Renderer = GetComponent<MeshRenderer>();
         MeshFilter mesh_Filter = GetComponent<MeshFilter>();
         map = new Map(52, 52);
-        mesh_Filter.mesh = map.generateMesh(38729148);
+        Map.Level level = map.generateLevel(38729148);
+        mesh_Filter.mesh = level.mesh;
         transform.position = map.position;
 
         float scale = 2;
@@ -28,7 +29,7 @@ public class MapEntity : MonoBehaviour
         float persistance = 0.6f;
         float lacunarity = 3.41f;
 
-        var mapData = map.generateMap(38714623, new Map.Range[0], scale, octaves, persistance, lacunarity);
+        var mapData = map.generateObjects(38714623, new Map.Range[0], scale, octaves, persistance, lacunarity);
 
         var obstaclesLength = sections[0].obstacles.Length;
         var obstacles = sections[0].obstacles;
