@@ -45,7 +45,7 @@ public class MapEntity : MonoBehaviour
                     var pos = new Vector3(x + 0.5f, y + 0.5f, 0) + map.position - offset;
                     var obj = Instantiate(tree, pos, Quaternion.identity);
                     var renderer = obj.GetComponentInChildren<SpriteRenderer>();
-                    renderer.sortingOrder = 52 - y;
+                    renderer.sortingOrder = (52 - y) * 100;
                 }
             }
     }

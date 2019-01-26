@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
            
         }
         transform.Translate(moveBy * movementSpeed * Time.deltaTime);
-        GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(52 - transform.position.y);
+        GetComponent<SpriteRenderer>().sortingOrder = (Mathf.RoundToInt(52 - transform.position.y) * 100) + 10;
 
         decreaseIfBoost();
     }
