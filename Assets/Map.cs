@@ -305,10 +305,10 @@ public class Map
 
                     if (frame != -1)
                     {
-                        verts.Add(new Vector3(x, y, -5f));
-                        verts.Add(new Vector3(x + 1, y, -5f));
-                        verts.Add(new Vector3(x, y + 1, -5f));
-                        verts.Add(new Vector3(x + 1, y + 1, -5f));
+                        verts.Add(new Vector3(x, y));
+                        verts.Add(new Vector3(x + 1, y));
+                        verts.Add(new Vector3(x, y + 1));
+                        verts.Add(new Vector3(x + 1, y + 1));
 
                         // tri 0
                         tris[s].Add(offset + 0);
