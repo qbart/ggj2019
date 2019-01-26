@@ -140,7 +140,8 @@ public class Map
     {
         Level level = new Level();
 
-        float[] values = { 0, 0.25f, 0.5f, 0.75f };
+        float[] valuesX = { 0, 0.25f, 0.5f, 0.75f };
+        float[] valuesY = { 0, 0.2f, 0.4f, 0.6f, 0.8f };
         var verts = new List<Vector3>();
         List<int>[] tris = {
             new List<int>(),
@@ -195,10 +196,10 @@ public class Map
                 tris[section].Add(offset + 2);
                 tris[section].Add(offset + 3);
 
-                uvs.Add(new Vector2(0 + values[typeX], 0.75f));
-                uvs.Add(new Vector2(0.25f + values[typeX], 0.75f));
-                uvs.Add(new Vector2(0 + values[typeX], 1));
-                uvs.Add(new Vector2(0.25f + values[typeX], 1));
+                uvs.Add(new Vector2(0 + valuesX[typeX], valuesY[valuesY.Length - 1]));
+                uvs.Add(new Vector2(valuesX[1] + valuesX[typeX], valuesY[valuesY.Length - 1]));
+                uvs.Add(new Vector2(0 + valuesX[typeX], 1));
+                uvs.Add(new Vector2(valuesX[1] + valuesX[typeX], 1));
 
                 offset += 4;
             }
@@ -218,6 +219,27 @@ public class Map
                     Matrix mat = samples.around(x, y, s);
 
                     if (mat.matches(
+                        0, 0, 0,
+                        1, 0, 1,
+                        1, 1, 1
+                    )) frame = 16;
+                    else if (mat.matches(
+                        1, 1, 0,
+                        1, 0, 0,
+                        1, 1, 0
+                    )) frame = 17;
+                    else if (mat.matches(
+                        1, 1, 1,
+                        1, 0, 1,
+                        0, 0, 0
+                    )) frame = 18;
+                    else if (mat.matches(
+                        0, 1, 1,
+                        0, 0, 1,
+                        0, 1, 1
+                    )) frame = 19;
+
+                    else if (mat.matches(
                         0, 0, 0,
                         0, 0, 1,
                         0, 1, 1
@@ -283,10 +305,10 @@ public class Map
 
                     if (frame != -1)
                     {
-                        verts.Add(new Vector3(x, y, -5));
-                        verts.Add(new Vector3(x + 1, y, -5));
-                        verts.Add(new Vector3(x, y + 1, -5));
-                        verts.Add(new Vector3(x + 1, y + 1, -5));
+                        verts.Add(new Vector3(x, y, -5f));
+                        verts.Add(new Vector3(x + 1, y, -5f));
+                        verts.Add(new Vector3(x, y + 1, -5f));
+                        verts.Add(new Vector3(x + 1, y + 1, -5f));
 
                         // tri 0
                         tris[s].Add(offset + 0);
@@ -298,13 +320,13 @@ public class Map
                         tris[s].Add(offset + 2);
                         tris[s].Add(offset + 3);
 
-                        int frameX = (int)frame % 4;
-                        int frameY = (int)frame / 4;
+                        int frameY = (int)frame / valuesX.Length;
+                        int frameX = (int)frame % valuesX.Length;
 
-                        uvs.Add(new Vector2(0 + values[frameX], 0 + values[3 - frameY]));
-                        uvs.Add(new Vector2(0.25f + values[frameX], 0 + values[3 - frameY]));
-                        uvs.Add(new Vector2(0 + values[frameX], 0.25f + values[3 - frameY]));
-                        uvs.Add(new Vector2(0.25f + values[frameX], 0.25f + values[3 - frameY]));
+                        uvs.Add(new Vector2(0          + valuesX[frameX], 0          + valuesY[valuesY.Length - 1 - frameY]));
+                        uvs.Add(new Vector2(valuesX[1] + valuesX[frameX], 0          + valuesY[valuesY.Length - 1 - frameY]));
+                        uvs.Add(new Vector2(0          + valuesX[frameX], valuesY[1] + valuesY[valuesY.Length - 1 - frameY]));
+                        uvs.Add(new Vector2(valuesX[1] + valuesX[frameX], valuesY[1] + valuesY[valuesY.Length - 1 - frameY]));
 
                         offset += 4;
 
