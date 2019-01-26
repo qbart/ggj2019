@@ -58,11 +58,22 @@ public class Map
         };
         var uvs = new List<Vector2>();
 
+        var toShuffle = new List<int>() { 0, 1, 2, 3 };
+        var shuffled = new List<int>() { };
+
+        while (toShuffle.Count > 0)
+        {
+            int index = Random.Range(0, toShuffle.Count);
+            shuffled.Add(toShuffle[index]);
+            toShuffle.RemoveAt(index);
+        }
+        int[] shuffledType = shuffled.ToArray();
+
         var samples = generateTerrainMap(seed, new Range[] {
-            new Range(0,0.3f,0),
-            new Range(0.3f,0.5f,1),
-            new Range(0.5f,0.7f,2),
-            new Range(0.7f,1.1f,3)
+            new Range(0, 0.3f, shuffledType[0]),
+            new Range(0.3f, 0.5f, shuffledType[1]),
+            new Range(0.5f, 0.7f, shuffledType[2]),
+            new Range(0.7f, 1.1f, shuffledType[3])
         }, 20, 3, 0, 5.6f);
 
         int offset = 0;
@@ -71,7 +82,7 @@ public class Map
             for (int x = 0; x < XN; ++x)
             {
                 int typeX = Random.Range(0, 4);
-                int section = (int) samples.grid[x, y];
+                int section = (int)samples.grid[x, y];
                 //   2 --- 3
                 //   |     |
                 //   |     |
