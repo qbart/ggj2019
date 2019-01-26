@@ -22,7 +22,7 @@ public class MapEntity : MonoBehaviour
         MeshRenderer mesh_Renderer = GetComponent<MeshRenderer>();
         MeshFilter mesh_Filter = GetComponent<MeshFilter>();
         map = new Map(52, 52);
-        mesh_Filter.mesh = map.generateMesh();
+        mesh_Filter.mesh = map.generateMesh(38729148);
         transform.position = map.position;
 
         float scale = 2;
@@ -30,7 +30,7 @@ public class MapEntity : MonoBehaviour
         float persistance = 0.6f;
         float lacunarity = 3.41f;
 
-        var mapData = map.generateMap(38714623, scale, octaves, persistance, lacunarity);
+        var mapData = map.generateMap(38714623, new Map.Range[0], scale, octaves, persistance, lacunarity);
 
         var tree = sections[0].obstacles[0];
 
@@ -38,7 +38,7 @@ public class MapEntity : MonoBehaviour
         for (int y = 0; y < mapData.YN; ++y)
             for (int x = 0; x < mapData.XN; ++x)
             {
-                if (mapData.grid[x, y] == 1)
+                if (mapData.grid[x, y] == 1f)
                 {
                     var collider = tree.GetComponent<BoxCollider2D>();
                     var offset = new Vector3(collider.offset.x, collider.offset.y + collider.size.y / 2, 0);

@@ -8,8 +8,28 @@ public class Map
 
     public struct Data
     {
-        public int[,] grid;
+        public float[,] grid;
         public int XN, YN;
+    }
+
+    [System.Serializable]
+    public struct Range
+    {
+        public float a;
+        public float b;
+        public float value;
+
+        public Range(float _a, float _b, float _value)
+        {
+            a = _a;
+            b = _b;
+            value = _value;
+        }
+
+        public bool isIn(float x)
+        {
+            return a <= x && x < b;
+        }
     }
 
     public Map(int xn, int yn)
@@ -26,7 +46,7 @@ public class Map
         }
     }
 
-    public Mesh generateMesh()
+    public Mesh generateMesh(int seed)
     {
         float[] values = { 0, 0.25f, 0.5f, 0.75f };
         var verts = new List<Vector3>();
@@ -38,13 +58,20 @@ public class Map
         };
         var uvs = new List<Vector2>();
 
+        var samples = generateTerrainMap(seed, new Range[] {
+            new Range(0,0.3f,0),
+            new Range(0.3f,0.5f,1),
+            new Range(0.5f,0.7f,2),
+            new Range(0.7f,1.1f,3)
+        }, 20, 3, 0, 5.6f);
+
         int offset = 0;
         for (int y = 0; y < YN; ++y)
         {
             for (int x = 0; x < XN; ++x)
             {
                 int typeX = Random.Range(0, 4);
-                int section = getSection(x, y);
+                int section = (int) samples.grid[x, y];
                 //   2 --- 3
                 //   |     |
                 //   |     |
@@ -83,12 +110,33 @@ public class Map
         return mesh;
     }
 
-    public Texture2D generateNoiseMap(int seed, float scale, int octaves, float persistance, float lacunarity)
+    public Data smoothMap(Range[] ranges, Data data)
+    {
+        for (int y = 0; y < data.YN; ++y)
+        {
+            for (int x = 0; x < data.XN; ++x)
+            {
+                foreach (var r in ranges)
+                {
+                    if (r.isIn(data.grid[x, y]))
+                    {
+                        data.grid[x, y] = r.value;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return data;
+    }
+
+    public Texture2D generateNoiseMap(int seed, Range[] ranges, float scale, int octaves, float persistance, float lacunarity)
     {
         var tex = new Texture2D(XN, YN);
         var colors = new Color[XN * YN];
 
-        var data = generateMap(seed, scale, octaves, persistance, lacunarity);
+        var data = generateNoise(seed, ranges, scale, octaves, persistance, lacunarity);
+        // data = smoothMap(ranges, data);
 
         for (int y = 0; y < YN; ++y)
         {
@@ -105,15 +153,22 @@ public class Map
         return tex;
     }
 
-    public Data generateMap(int seed, float scale, int octaves, float persistance, float lacunarity)
+    public Data generateTerrainMap(int seed, Range[] ranges, float scale, int octaves, float persistance, float lacunarity)
+    {
+        var samples0 = generateNoise(seed, ranges, scale, octaves, persistance, lacunarity);
+        samples0 = smoothMap(ranges, samples0);
+        return samples0;
+    }
+
+    public Data generateMap(int seed, Range[] ranges, float scale, int octaves, float persistance, float lacunarity)
     {
         System.Random prng = new System.Random(seed);
-        var samples0 = generateNoise(prng.Next(), scale, octaves, persistance, lacunarity);
-        var samples1 = generateNoise(prng.Next(), scale, octaves, persistance, lacunarity);
-        var samples2 = generateNoise(prng.Next(), scale, octaves, persistance, lacunarity);
+        var samples0 = generateNoise(prng.Next(), ranges, scale, octaves, persistance, lacunarity);
+        var samples1 = generateNoise(prng.Next(), ranges, scale, octaves, persistance, lacunarity);
+        var samples2 = generateNoise(prng.Next(), ranges, scale, octaves, persistance, lacunarity);
 
         Data data;
-        data.grid = new int[XN, YN];
+        data.grid = new float[XN, YN];
         data.YN = YN;
         data.XN = XN;
 
@@ -121,16 +176,23 @@ public class Map
         {
             for (int x = 0; x < XN; ++x)
             {
-                data.grid[x, y] = (int)Mathf.Clamp01(samples0[x, y] - samples1[x, y] - samples2[x, y]);
+                data.grid[x, y] = Mathf.Clamp01(
+                    hardValue(samples0.grid[x, y], 0.5f)
+                     - hardValue(samples1.grid[x, y], 0.5f)
+                     - hardValue(samples2.grid[x, y], 0.5f)
+                     );
             }
         }
 
         return data;
     }
 
-    public float[,] generateNoise(int seed, float scale, int octaves, float persistance, float lacunarity)
+    public Data generateNoise(int seed, Range[] ranges, float scale, int octaves, float persistance, float lacunarity)
     {
-        var samples = new float[XN, YN];
+        Data samples;
+        samples.grid = new float[XN, YN];
+        samples.YN = YN;
+        samples.XN = XN;
         Vector2 offset = new Vector2(0, 0);
 
         System.Random prng = new System.Random(seed);
@@ -186,7 +248,7 @@ public class Map
                 {
                     minLocalNoiseHeight = noiseHeight;
                 }
-                samples[x, y] = noiseHeight;
+                samples.grid[x, y] = noiseHeight;
             }
         }
 
@@ -194,11 +256,7 @@ public class Map
         {
             for (int x = 0; x < XN; x++)
             {
-                samples[x, y] = Mathf.InverseLerp(minLocalNoiseHeight, maxLocalNoiseHeight, samples[x, y]);
-                if (samples[x, y] < 0.5)
-                    samples[x, y] = 0;
-                else
-                    samples[x, y] = 1;
+                samples.grid[x, y] = Mathf.InverseLerp(minLocalNoiseHeight, maxLocalNoiseHeight, samples.grid[x, y]);
             }
         }
 
@@ -219,6 +277,14 @@ public class Map
             section = 3;
 
         return section;
+    }
+
+    float hardValue(float value, float mid)
+    {
+        if (value < mid)
+            return 0;
+        else
+            return 1;
     }
 
 }

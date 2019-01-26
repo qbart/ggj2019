@@ -7,11 +7,12 @@ public class NoiseTester : MonoBehaviour
     Map map;
     public int seed = 0;
     public float scale = 50;
+    [Range(1, 100)]
     public int octaves = 6;
     [Range(0,1)]
     public float persistance = 0.6f;
     public float lacunarity = 2;
-    public Vector2 offset;
+    public Map.Range[] ranges;
 
     void Start()
     {
@@ -21,7 +22,7 @@ public class NoiseTester : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var tex = map.generateNoiseMap(seed, scale, octaves, persistance, lacunarity);
+        var tex = map.generateNoiseMap(seed, ranges, scale, octaves, persistance, lacunarity);
         // var tex = map.generateNoiseMap(seed);
         var renderer = GetComponent<Renderer>();
         renderer.sharedMaterial.mainTexture = tex;
