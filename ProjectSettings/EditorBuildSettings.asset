@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HouseWin.unity
     guid: 956cc3af151344b30a43a7eaaf3dac5b
+  - enabled: 1
+    path: Assets/Scenes/WitchWin.unity
+    guid: 8ffb539446ec14ad9ba783f0971e87c1
+  - enabled: 1
+    path: Assets/Scenes/Intro.unity
+    guid: 3cee2a757297341739f0c0aca834cbe8
   m_configObjects: {}
