@@ -13,14 +13,19 @@ public class Player : MonoBehaviour
     public float movementSpeed;
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
     Vector3 prevMoveBy = Vector3.zero;
-    Booster booster;
     Vector3 moveBy;
+
+    Booster booster;
+    PlayerCamouflage camouflage;
 
     private void Start()
     {
         booster = GetComponent<Booster>();
         booster.onEffectStart += boostStarted;
         booster.onEffectStop += boostStopped;
+
+        camouflage = GetComponent<PlayerCamouflage>();
+
         m_Animator = gameObject.GetComponent<Animator>();
         moveBy = Vector3.zero;
     }
@@ -56,6 +61,9 @@ public class Player : MonoBehaviour
         float verticalDir = Input.GetAxis("Vertical_" + playerNumber);
         moveBy = new Vector3(horizontalDir, verticalDir, 0);
 
+        if (camouflage != null && camouflage.isOn)
+            moveBy = Vector3.zero;
+
         if (prevMoveBy != moveBy)
         {
             UpdateAnimations();
@@ -63,7 +71,7 @@ public class Player : MonoBehaviour
 
         prevMoveBy = moveBy;
         hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, 0.3f);
-        Debug.DrawRay(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, Color.yellow, 1);
+        Debug.DrawRay(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, Color.yellow, 0.5f);
         if (hitter.collider != null)
         {
             if (hitter.collider.CompareTag("booster"))
@@ -81,6 +89,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
         transform.Translate(moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime);
         GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(5200 - (transform.position.y + bottomRayOffset.y) * 100) - playerNumber;
     }
