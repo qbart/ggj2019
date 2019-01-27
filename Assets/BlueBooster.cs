@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BlueBooster : MonoBehaviour
 {
@@ -8,7 +6,8 @@ public class BlueBooster : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            Debug.Log("Apply booster to player here");
+            var player = col.GetComponent<Player>();
+            player.boost();
             Destroy(gameObject);
         }
     }

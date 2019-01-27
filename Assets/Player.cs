@@ -18,6 +18,14 @@ public class Player : MonoBehaviour
     Booster booster;
     PlayerCamouflage camouflage;
 
+    public void boost()
+    {
+        if (!booster.isStarted)
+        {
+            booster.boost();
+        }
+    }
+
     private void Start()
     {
         booster = GetComponent<Booster>();
@@ -72,23 +80,6 @@ public class Player : MonoBehaviour
         prevMoveBy = moveBy;
         hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, 0.3f);
         Debug.DrawRay(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, Color.yellow, 0.5f);
-        if (hitter.collider != null)
-        {
-            if (hitter.collider.CompareTag("booster"))
-            {
-                if (!booster.isStarted)
-                {
-                    booster.boost();
-                }
-            }
-            else
-            {
-                if (!hitter.collider.isTrigger)
-                {
-                    moveBy = Vector3.zero;
-                }
-            }
-        }
 
         transform.Translate(moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime);
         GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(5200 - (transform.position.y + bottomRayOffset.y) * 100) - playerNumber;
