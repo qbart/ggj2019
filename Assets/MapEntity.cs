@@ -16,8 +16,11 @@ public class MapEntity : MonoBehaviour
 
     public Section[] sections;
 
+
     Map map;
-    Map.Level level;
+
+    [HideInInspector]
+    public Map.Level level;
 
     void Start()
     {

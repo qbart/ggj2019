@@ -11,6 +11,7 @@ public class PlayerCamouflage : MonoBehaviour
     public float camouflageTime = 2f;
     public float cooldownTime = 2f;
 
+    public GameObject map;
     public MapEntity.Section[] sections;
 
     Renderer spriteRenderer;
@@ -94,14 +95,26 @@ public class PlayerCamouflage : MonoBehaviour
 
     void poof()
     {
-        var prefab = sections[0].obstacles[1];
-        var offsetX = 0f;
+        var rayOffset = new Vector3(0.17f, -1.6f, 0);
+        var gridPos = transform.position - rayOffset;
+        int x = (int) Mathf.Clamp(gridPos.x % 52, 0, 51);
+        int y = (int) Mathf.Clamp(gridPos.y % 52, 0, 51);
+        var section = (int)map.GetComponent<MapEntity>().level.data.grid[x, y];
+        var obstaclesLength = map.GetComponent<MapEntity>().sections[section].obstacles.Length;
+        var obstacles = map.GetComponent<MapEntity>().sections[section].obstacles;
+        int obstacleIndex = Random.Range(0, obstaclesLength);
+        var prefab = obstacles[obstacleIndex];
+        Vector3 offset = Vector3.zero;
+        Vector3 pos = Vector3.zero;
         if (prefab.GetComponent<BoxCollider2D>())
         {
             var col = prefab.GetComponent<BoxCollider2D>();
-            offsetX = col.size.x / 2;
+            offset = new Vector3(col.offset.x, -col.offset.y + col.size.y/2, 0);
+            pos = new Vector3(x + 0.5f, y + 0.5f, 0) - offset;
+
         }
-        var instance = Instantiate(prefab, transform.position + new Vector3(offsetX, 0, 0), Quaternion.identity, transform);
+        var instance = Instantiate(prefab, transform.position, Quaternion.identity, transform);
+        instance.transform.Translate(rayOffset + offset);
         instance.GetComponentInChildren<SpriteRenderer>().sortingOrder = spriteRenderer.sortingOrder;
 
         poofedObjs.Add(instance);
