@@ -208,7 +208,6 @@ public class Map
         for (int i = 0; i < shuffledType.Length; ++i)
         {
             int s = shuffledType[i];
-            break;
 
             var frames = new List<int>();
 
