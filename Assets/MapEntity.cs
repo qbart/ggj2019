@@ -75,7 +75,7 @@ public class MapEntity : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(3f);
 
             // TODO: prevent collisions from grid
             int x = Random.Range(2, 50);
@@ -85,6 +85,7 @@ public class MapEntity : MonoBehaviour
             var obj = Instantiate(boosters[Random.Range(0, boosters.Length)], pos, Quaternion.identity);
             var renderer = obj.GetComponentInChildren<SpriteRenderer>();
             renderer.sortingOrder = Mathf.RoundToInt(5200 - (obj.transform.position.y * 100));
+            Destroy(obj, 10);
         }
     }
 }
