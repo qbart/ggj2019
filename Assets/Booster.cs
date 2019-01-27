@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
+
 namespace Application
 {
     public class Booster : MonoBehaviour
     {
+
         public float effectTime = 2f;
         public float maxDecayTime = 1f;
         [Range(0, 1)]
@@ -12,6 +15,9 @@ namespace Application
         bool running;
         float timer, decayTimer;
         float speed;
+
+        public UnityAction onEffectStart;
+        public UnityAction onEffectStop;
 
         public bool isStarted
         {
@@ -35,6 +41,9 @@ namespace Application
             timer = effectTime;
             decayTimer = maxDecayTime;
             speed = speedBoost;
+
+            if (onEffectStart != null)
+                onEffectStart();
         }
 
         void Start()
@@ -54,7 +63,11 @@ namespace Application
                     speed *= decayValue;
 
                     if (decayTimer <= 0 || speed <= 0)
+                    {
                         running = false;
+                        if (onEffectStop != null)
+                            onEffectStop();
+                    }
                 }
             }
         }
