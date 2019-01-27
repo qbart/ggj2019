@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 
 [RequireComponent(typeof(MeshRenderer))]
@@ -11,16 +12,19 @@ public class MapEntity : MonoBehaviour
         public GameObject[] obstacles;
     }
 
+    public GameObject[] boosters;
+
     public Section[] sections;
 
     Map map;
+    Map.Level level;
 
     void Start()
     {
         MeshRenderer mesh_Renderer = GetComponent<MeshRenderer>();
         MeshFilter mesh_Filter = GetComponent<MeshFilter>();
         map = new Map(52, 52);
-        Map.Level level = map.generateLevel(38729148);
+        level = map.generateLevel(38729148);
         mesh_Filter.mesh = level.mesh;
         transform.position = map.position;
 
@@ -31,7 +35,6 @@ public class MapEntity : MonoBehaviour
 
         var mapData = map.generateObjects(38714623, new Map.Range[0], scale, octaves, persistance, lacunarity);
 
-        int zindex = 0;
         for (int y = 0; y < mapData.YN; ++y)
             for (int x = 0; x < mapData.XN; ++x)
             {
@@ -44,13 +47,15 @@ public class MapEntity : MonoBehaviour
                 if (mapData.grid[x, y] == 1)
                 {
                     var collider = obstacle.GetComponent<BoxCollider2D>();
-                    var offset = new Vector3(collider.offset.x, collider.offset.y + collider.size.y / 2, 0);
+                    var offset = new Vector3(collider.offset.x, collider.offset.y - collider.size.y, 0);
                     var pos = new Vector3(x + 0.5f, y + 0.5f, 0) + map.position - offset;
                     var obj = Instantiate(obstacle, pos, Quaternion.identity);
                     var renderer = obj.GetComponentInChildren<SpriteRenderer>();
-                    renderer.sortingOrder = (52 - y) * 100;
+                    renderer.sortingOrder = Mathf.RoundToInt(5200 - ((obj.transform.position.y + offset.y) * 100));
                 }
             }
+
+        StartCoroutine("spawnBoosters");
     }
 
     void Update()
@@ -59,5 +64,22 @@ public class MapEntity : MonoBehaviour
 
     void OnDrawGizmos()
     {
+    }
+
+    IEnumerator spawnBoosters()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+
+            // TODO: prevent collisions from grid
+            int x = Random.Range(2, 50);
+            int y = Random.Range(2, 50);
+
+            var pos = new Vector3(x, y, 0);
+            var obj = Instantiate(boosters[Random.Range(0, boosters.Length)], pos, Quaternion.identity);
+            var renderer = obj.GetComponentInChildren<SpriteRenderer>();
+            renderer.sortingOrder = Mathf.RoundToInt(5200 - (obj.transform.position.y * 100));
+        }
     }
 }

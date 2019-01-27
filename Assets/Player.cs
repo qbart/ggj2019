@@ -11,9 +11,8 @@ public class Player : MonoBehaviour
     RaycastHit2D hitter;
 
     public float movementSpeed;
-    public Vector3 offset = new Vector3(0, -0.51f, 0);
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
-    public Vector3 prevMoveBy = Vector3.zero;
+    Vector3 prevMoveBy = Vector3.zero;
     Booster booster;
     Vector3 moveBy;
 
@@ -56,17 +55,18 @@ public class Player : MonoBehaviour
         float horizontalDir = Input.GetAxis("Horizontal_" + playerNumber);
         float verticalDir = Input.GetAxis("Vertical_" + playerNumber);
         moveBy = new Vector3(horizontalDir, verticalDir, 0);
-       
+
         if (prevMoveBy != moveBy)
         {
             UpdateAnimations();
         }
 
         prevMoveBy = moveBy;
-        hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy, 0.2f);
+        hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, 0.3f);
+        Debug.DrawRay(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, Color.yellow, 1);
         if (hitter.collider != null)
         {
-            if (hitter.collider.tag == "booster")
+            if (hitter.collider.CompareTag("booster"))
             {
                 if (!booster.isStarted)
                 {
@@ -75,19 +75,20 @@ public class Player : MonoBehaviour
             }
             else
             {
-                moveBy = Vector3.zero;
-                Debug.DrawRay(transform.position + bottomRayOffset, transform.TransformDirection(Vector3.right) * hitter.distance, Color.yellow, 5);
+                if (!hitter.collider.isTrigger)
+                {
+                    moveBy = Vector3.zero;
+                }
             }
-           
         }
         transform.Translate(moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime);
-        GetComponent<SpriteRenderer>().sortingOrder = (Mathf.RoundToInt(52 - transform.position.y) * 100) + 10 + playerNumber;
+        GetComponent<SpriteRenderer>().sortingOrder = Mathf.RoundToInt(5200 - (transform.position.y + bottomRayOffset.y) * 100) - playerNumber;
     }
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawCube(transform.position + offset, new Vector3(0.2f, 0.4f, 0.2f));
+        Gizmos.DrawCube(transform.position + bottomRayOffset, new Vector3(0.1f, 0.1f, 0));
     }
 
     void boostStarted()
