@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 87172851}
   - component: {fileID: 87172850}
   - component: {fileID: 87172852}
+  - component: {fileID: 87172853}
   m_Layer: 9
   m_Name: Player2
   m_TagString: Player
@@ -250,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80db748784d1b453dbdc2d1b53421555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectTime: 2
+  effectTime: 3
   maxDecayTime: 1
   decayValue: 0.8
   speedBoost: 1.5
@@ -303,9 +304,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fb0bf29436002c498422ecd38dfd8a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camouflageTime: 2
+  camouflageTime: 5
   cooldownTime: 2
   map: {fileID: 1054528192}
+--- !u!114 &87172853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87172844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b632ccca11a44f019b78555a9461906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstPlayer: {fileID: 972321222}
 --- !u!1 &95572089
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,7 +815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80db748784d1b453dbdc2d1b53421555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectTime: 2
+  effectTime: 3
   maxDecayTime: 1
   decayValue: 0.8
   speedBoost: 1.5
