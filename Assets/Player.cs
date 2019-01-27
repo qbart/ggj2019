@@ -10,10 +10,14 @@ public class Player : MonoBehaviour
 
     RaycastHit2D hitter;
 
+    public LayerMask obstacleMask;
+    public LayerMask otherPlayerMask;
+
     public float movementSpeed;
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
     Vector3 prevMoveBy = Vector3.zero;
     Vector3 moveBy;
+
 
     Booster booster;
     PlayerCamouflage camouflage;
@@ -70,8 +74,26 @@ public class Player : MonoBehaviour
         }
 
         prevMoveBy = moveBy;
-        hitter = Physics2D.Raycast(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, 0.3f);
+        hitter = Physics2D.Raycast(
+            transform.position + bottomRayOffset,
+            moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f,
+            0.3f,
+            obstacleMask
+
+        );
         Debug.DrawRay(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, Color.yellow, 0.5f);
+
+        Collider2D otherPlayerHit = Physics2D.OverlapCircle(
+            transform.position + bottomRayOffset,
+            0.6f,
+            otherPlayerMask
+        );
+
+        if (otherPlayerHit != null)
+        {
+            Debug.Log("Other player hit");
+        }
+
         if (hitter.collider != null)
         {
             if (hitter.collider.CompareTag("booster"))
@@ -98,6 +120,7 @@ public class Player : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawCube(transform.position + bottomRayOffset, new Vector3(0.1f, 0.1f, 0));
+        Gizmos.DrawSphere(transform.position + bottomRayOffset, 0.6f);
     }
 
     void boostStarted()
