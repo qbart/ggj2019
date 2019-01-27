@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     private void Start()
     {
         booster = GetComponent<Booster>();
+        booster.onEffectStart += boostStarted;
+        booster.onEffectStop += boostStopped;
         m_Animator = gameObject.GetComponent<Animator>();
         moveBy = Vector3.zero;
     }
@@ -69,7 +71,6 @@ public class Player : MonoBehaviour
                 if (!booster.isStarted)
                 {
                     booster.boost();
-                    UpdateAnimations();
                 }
             }
             else
@@ -87,5 +88,15 @@ public class Player : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawCube(transform.position + offset, new Vector3(0.2f, 0.4f, 0.2f));
+    }
+
+    void boostStarted()
+    {
+        UpdateAnimations();
+    }
+
+    void boostStopped()
+    {
+        UpdateAnimations();
     }
 }
