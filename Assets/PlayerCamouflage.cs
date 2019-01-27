@@ -28,13 +28,19 @@ public class PlayerCamouflage : MonoBehaviour
 
     bool running;
     bool allowNextCamouflage;
+    bool allowBreak;
+    bool breakRequested;
     List<GameObject> poofedObjs;
+
+    private IEnumerator cor;
 
     void Start()
     {
         poofedObjs = new List<GameObject>();
         running = false;
         allowNextCamouflage = true;
+        allowBreak = false;
+        breakRequested = false;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         var renderers = GetComponentsInChildren<SpriteRenderer>();
@@ -53,7 +59,22 @@ public class PlayerCamouflage : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             if (allowNextCamouflage)
-                StartCoroutine(camouflage());
+                StartCoroutine(cor = camouflage());
+        }
+        else if (Input.GetKeyUp(KeyCode.Q))
+        {
+            breakRequested = true;
+
+        }
+
+        if (breakRequested)
+        {
+            if (running && allowBreak)
+            {
+                StopCoroutine(cor);
+                camouflageStopped();
+            }
+
         }
     }
 
@@ -62,25 +83,24 @@ public class PlayerCamouflage : MonoBehaviour
         Debug.Log("cam begin");
 
         allowNextCamouflage = false;
+        allowBreak = false;
         running = true;
+        breakRequested = false;
 
         if (onCamouflageStart != null)
             onCamouflageStart();
 
         yield return new WaitForSeconds(0.2f);
-
         pooferRenderer.enabled = false;
         pooferAnimator.enabled = false;
         poof();
+
+        allowBreak = true;
 
         yield return new WaitForSeconds(camouflageTime - 0.2f);
 
         if (onCamouflageStop != null)
             onCamouflageStop();
-
-        running = false;
-        Debug.Log("cam end");
-        StartCoroutine(cooldown());
     }
 
     IEnumerator cooldown()
@@ -96,8 +116,8 @@ public class PlayerCamouflage : MonoBehaviour
     {
         var rayOffset = new Vector3(0.17f, -1.6f, 0);
         var gridPos = transform.position + rayOffset;
-        int x = (int) Mathf.Clamp(gridPos.x % 52, 0, 51);
-        int y = (int) Mathf.Clamp(gridPos.y % 52, 0, 51);
+        int x = (int)Mathf.Clamp(gridPos.x % 52, 0, 51);
+        int y = (int)Mathf.Clamp(gridPos.y % 52, 0, 51);
 
         // Debug.Log("x: " + x);
         // Debug.Log("y: " + y);
@@ -113,7 +133,7 @@ public class PlayerCamouflage : MonoBehaviour
         if (prefab.GetComponent<BoxCollider2D>())
         {
             var col = prefab.GetComponent<BoxCollider2D>();
-            offset = new Vector3(col.offset.x, -col.offset.y + col.size.y/2, 0);
+            offset = new Vector3(col.offset.x, -col.offset.y + col.size.y / 2, 0);
             pos = new Vector3(x + 0.5f, y + 0.5f, 0) - offset;
 
         }
@@ -135,6 +155,11 @@ public class PlayerCamouflage : MonoBehaviour
 
     void camouflageStopped()
     {
+        Debug.Log("cam end");
+        running = false;
+        allowBreak = false;
+        StartCoroutine(cooldown());
+
         foreach (var o in poofedObjs)
             Destroy(o);
 
