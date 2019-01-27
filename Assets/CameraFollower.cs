@@ -3,25 +3,32 @@
 public class CameraFollower : MonoBehaviour
 {
     public GameObject player;
-    public float minBoundary = 0;
-    public float maxBoundary = 53;
+
+    public float left;
+    public float right;
+    public float top;
+    public float bottom;
+
+    bool first;
 
     private void Start()
     {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
+        first = true;
     }
 
     void Update()
     {
-        var playerDistance = Vector2.Distance(player.transform.position, transform.position);
-        var playerPos = player.transform.position;
-
-        var playerInMap = playerPos.x >= minBoundary && playerPos.x <= maxBoundary && playerPos.y >= minBoundary && playerPos.y <= maxBoundary;
-
-
-        if (playerDistance > 2.5 && playerInMap)
+        if (first)
         {
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(playerPos.x, playerPos.y, -10), Time.deltaTime * 4);
+            transform.position = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
+            first = false;
         }
+
+        var playerPos = player.transform.position;
+        transform.position = Vector3.MoveTowards(transform.position, new Vector3(playerPos.x, playerPos.y, transform.position.z), Time.deltaTime * 4);
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, left, right);
+        pos.y = Mathf.Clamp(pos.y, bottom, top);
+        transform.position = pos;
     }
 }
