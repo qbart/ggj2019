@@ -11,7 +11,12 @@ public class PlayerCamouflage : MonoBehaviour
     public float camouflageTime = 2f;
     public float cooldownTime = 2f;
 
+    public MapEntity.Section[] sections;
+
     Renderer spriteRenderer;
+    Renderer pooferRenderer;
+    Animator pooferAnimator;
+
 
     public bool isOn
     {
@@ -23,13 +28,21 @@ public class PlayerCamouflage : MonoBehaviour
 
     bool running;
     bool allowNextCamouflage;
+    List<GameObject> poofedObjs;
 
     void Start()
     {
+        poofedObjs = new List<GameObject>();
         running = false;
         allowNextCamouflage = true;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+        var renderers = GetComponentsInChildren<SpriteRenderer>();
+        var animators = GetComponentsInChildren<Animator>();
+        pooferAnimator = animators[animators.Length - 1];
+        pooferRenderer = renderers[renderers.Length - 1];
+        pooferRenderer.enabled = false;
+        pooferAnimator.enabled = false;
 
         onCamouflageStart += camouflageStarted;
         onCamouflageStop += camouflageStopped;
@@ -54,7 +67,13 @@ public class PlayerCamouflage : MonoBehaviour
         if (onCamouflageStart != null)
             onCamouflageStart();
 
-        yield return new WaitForSeconds(camouflageTime);
+        yield return new WaitForSeconds(0.2f);
+
+        pooferRenderer.enabled = false;
+        pooferAnimator.enabled = false;
+        poof();
+
+        yield return new WaitForSeconds(camouflageTime - 0.2f);
 
         if (onCamouflageStop != null)
             onCamouflageStop();
@@ -72,13 +91,40 @@ public class PlayerCamouflage : MonoBehaviour
         Debug.Log("cooldown end");
     }
 
+
+    void poof()
+    {
+        var prefab = sections[0].obstacles[1];
+        var offsetX = 0f;
+        if (prefab.GetComponent<BoxCollider2D>())
+        {
+            var col = prefab.GetComponent<BoxCollider2D>();
+            offsetX = col.size.x / 2;
+        }
+        var instance = Instantiate(prefab, transform.position + new Vector3(offsetX, 0, 0), Quaternion.identity, transform);
+        instance.GetComponentInChildren<SpriteRenderer>().sortingOrder = spriteRenderer.sortingOrder;
+
+        poofedObjs.Add(instance);
+    }
+
     void camouflageStarted()
     {
+        pooferAnimator.enabled = true;
+        pooferRenderer.enabled = true;
         spriteRenderer.enabled = false;
+
+        pooferAnimator.Play(0);
     }
 
     void camouflageStopped()
     {
+        foreach (var o in poofedObjs)
+            Destroy(o);
+
+        poofedObjs.Clear();
+
+        pooferAnimator.enabled = false;
+        pooferRenderer.enabled = false;
         spriteRenderer.enabled = true;
     }
 
