@@ -93,7 +93,16 @@ public class Player : MonoBehaviour
         );
         Debug.DrawRay(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, Color.yellow, 0.5f);
 
-        if(playerNumber == 1)
+        if (hitter.collider != null)
+        {
+            if (!hitter.collider.isTrigger)
+            {
+                moveBy = Vector3.zero;
+            }
+        }
+
+
+        if (playerNumber == 1)
         {
             Collider2D otherPlayerHit = Physics2D.OverlapCircle(
             transform.position + bottomRayOffset,
