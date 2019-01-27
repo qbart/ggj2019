@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
 
             if (otherPlayerHit != null)
             {
-                SceneManager.LoadScene("HouseWin");
+                SceneManager.LoadScene("WitchWin");
             }
         }
 
