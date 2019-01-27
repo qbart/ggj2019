@@ -305,19 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camouflageTime: 2
   cooldownTime: 2
-  sections:
-  - obstacles:
-    - {fileID: 8325143233428446922, guid: 0c66a24b2694f481695ee03642f15401, type: 3}
-    - {fileID: 8325143233428446922, guid: 2575be718c91c493d9886ed82e730a54, type: 3}
-  - obstacles:
-    - {fileID: 8325143233428446922, guid: 9495dbf22e7fc4e84a2b6d7ad187d99a, type: 3}
-    - {fileID: 8325143233428446922, guid: e0b582335ec4a4682a1af779d2cc7992, type: 3}
-  - obstacles:
-    - {fileID: 8325143233428446922, guid: ef894e7bca5d540de88dc745006dbba3, type: 3}
-    - {fileID: 8325143233428446922, guid: 7f828028d587a465f89a6b6ec0b05af0, type: 3}
-  - obstacles:
-    - {fileID: 8325143233428446922, guid: 7070da1b245c34e2e9dbe219e9acebba, type: 3}
-    - {fileID: 8325143233428446922, guid: 897c5ce49ead447d891100aaf1a7e30d, type: 3}
+  map: {fileID: 1054528192}
 --- !u!1 &95572089
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,7 +497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a37209dde097248ab93210c13e9e7861, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLeft: 220
+  timeLeft: 120
   countdown: {fileID: 217192070}
 --- !u!1 &426377411
 GameObject:
@@ -654,7 +642,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 844448157}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.13, y: 4.31, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -672,7 +660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7552c5ef10b4c288a05e743beb7022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 87172844}
+  player: {fileID: 972321221}
   minBoundary: 0
   maxBoundary: 53
 --- !u!1 &972321221
@@ -716,7 +704,7 @@ MonoBehaviour:
   otherPlayerMask:
     serializedVersion: 2
     m_Bits: 512
-  movementSpeed: 3.5
+  movementSpeed: 2.5
   bottomRayOffset: {x: 0, y: -0.72, z: 0}
 --- !u!212 &972321223
 SpriteRenderer:
@@ -1504,7 +1492,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1528,7 +1516,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839927113}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.32, y: 5.67, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1546,6 +1534,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7552c5ef10b4c288a05e743beb7022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 972321221}
+  player: {fileID: 87172844}
   minBoundary: 0
   maxBoundary: 53
