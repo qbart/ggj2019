@@ -40,6 +40,8 @@ public class Player : MonoBehaviour
 
         m_Animator = gameObject.GetComponent<Animator>();
         moveBy = Vector3.zero;
+        Vector2 randomPosition = new Vector2(Random.Range(7, 46), Random.Range(7, 46));
+        transform.position = randomPosition;
     }
 
     void UpdateAnimations()

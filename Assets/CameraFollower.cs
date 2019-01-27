@@ -6,6 +6,11 @@ public class CameraFollower : MonoBehaviour
     public float minBoundary = 0;
     public float maxBoundary = 53;
 
+    private void Start()
+    {
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
+    }
+
     void Update()
     {
         var playerDistance = Vector2.Distance(player.transform.position, transform.position);
