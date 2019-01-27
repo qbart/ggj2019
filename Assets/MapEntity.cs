@@ -21,10 +21,12 @@ public class MapEntity : MonoBehaviour
 
     void Start()
     {
+        System.Random prng = new System.Random();
+
         MeshRenderer mesh_Renderer = GetComponent<MeshRenderer>();
         MeshFilter mesh_Filter = GetComponent<MeshFilter>();
         map = new Map(52, 52);
-        level = map.generateLevel(38729148);
+        level = map.generateLevel(prng.Next());
         mesh_Filter.mesh = level.mesh;
         transform.position = map.position;
 
@@ -33,7 +35,7 @@ public class MapEntity : MonoBehaviour
         float persistance = 0.6f;
         float lacunarity = 3.41f;
 
-        var mapData = map.generateObjects(38714623, new Map.Range[0], scale, octaves, persistance, lacunarity);
+        var mapData = map.generateObjects(prng.Next(), new Map.Range[0], scale, octaves, persistance, lacunarity);
 
         for (int y = 0; y < mapData.YN; ++y)
             for (int x = 0; x < mapData.XN; ++x)
