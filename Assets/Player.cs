@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
 
     public LayerMask obstacleMask;
     public LayerMask otherPlayerMask;
-
     public float movementSpeed;
     public Vector3 bottomRayOffset = new Vector3(0f, -0.72f, 0);
     Vector3 prevMoveBy = Vector3.zero;
@@ -32,6 +31,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+     
         booster = GetComponent<Booster>();
         booster.onEffectStart += boostStarted;
         booster.onEffectStop += boostStopped;
@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
 
         m_Animator = gameObject.GetComponent<Animator>();
         moveBy = Vector3.zero;
+
         Vector2 randomPosition = new Vector2(Random.Range(7, 46), Random.Range(7, 46));
         transform.position = randomPosition;
     }
