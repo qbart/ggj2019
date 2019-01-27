@@ -83,15 +83,18 @@ public class Player : MonoBehaviour
         );
         Debug.DrawRay(transform.position + bottomRayOffset, moveBy * (movementSpeed + booster.currentSpeed) * Time.deltaTime * 1.5f, Color.yellow, 0.5f);
 
-        Collider2D otherPlayerHit = Physics2D.OverlapCircle(
+        if(playerNumber == 1)
+        {
+            Collider2D otherPlayerHit = Physics2D.OverlapCircle(
             transform.position + bottomRayOffset,
             0.6f,
             otherPlayerMask
         );
 
-        if (otherPlayerHit != null)
-        {
-            Debug.Log("Other player hit");
+            if (otherPlayerHit != null)
+            {
+                Debug.Log("Other player hit");
+            }
         }
 
         if (hitter.collider != null)
@@ -120,7 +123,7 @@ public class Player : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawCube(transform.position + bottomRayOffset, new Vector3(0.1f, 0.1f, 0));
-        Gizmos.DrawSphere(transform.position + bottomRayOffset, 0.6f);
+        //Gizmos.DrawSphere(transform.position + bottomRayOffset, 0.6f);
     }
 
     void boostStarted()
