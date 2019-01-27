@@ -1,5 +1,6 @@
 ﻿using Application;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Booster))]
 
 
@@ -113,7 +114,7 @@ public class Player : MonoBehaviour
 
             if (otherPlayerHit != null)
             {
-                Debug.Log("Other player hit");
+                SceneManager.LoadScene("HouseWin");
             }
         }
 
