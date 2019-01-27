@@ -43,8 +43,13 @@ public class PlayerArrow : MonoBehaviour
             yield return new WaitForSeconds(showArrowEvery);
 
             var dir = other.transform.position - transform.position;
-            arrowTransform.rotation = Quaternion.LookRotation(dir, Vector3.up);
-            arrowTransform.position = Vector3.up * 1.5f;
+           
+            var rot = Quaternion.LookRotation(dir, -Vector3.forward);
+            rot.x = 0;
+            rot.y = 0;
+            arrowTransform.rotation = rot;
+
+
             arrowRenderer.enabled = true;
 
             yield return new WaitForSeconds(arrowVisibleTime);
