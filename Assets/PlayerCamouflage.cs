@@ -12,7 +12,6 @@ public class PlayerCamouflage : MonoBehaviour
     public float cooldownTime = 2f;
 
     public GameObject map;
-    public MapEntity.Section[] sections;
 
     Renderer spriteRenderer;
     Renderer pooferRenderer;
@@ -96,10 +95,15 @@ public class PlayerCamouflage : MonoBehaviour
     void poof()
     {
         var rayOffset = new Vector3(0.17f, -1.6f, 0);
-        var gridPos = transform.position - rayOffset;
+        var gridPos = transform.position + rayOffset;
         int x = (int) Mathf.Clamp(gridPos.x % 52, 0, 51);
         int y = (int) Mathf.Clamp(gridPos.y % 52, 0, 51);
+
+        // Debug.Log("x: " + x);
+        // Debug.Log("y: " + y);
+
         var section = (int)map.GetComponent<MapEntity>().level.data.grid[x, y];
+        // Debug.Log("s: " + section);
         var obstaclesLength = map.GetComponent<MapEntity>().sections[section].obstacles.Length;
         var obstacles = map.GetComponent<MapEntity>().sections[section].obstacles;
         int obstacleIndex = Random.Range(0, obstaclesLength);
