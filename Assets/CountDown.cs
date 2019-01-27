@@ -34,7 +34,7 @@ public class CountDown : MonoBehaviour
 
         if(timeLeft <= 0)
         {
-            SceneManager.LoadScene("HouseWin", LoadSceneMode.Additive);
+            SceneManager.LoadScene("HouseWin");
         }
     }
 
