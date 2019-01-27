@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
         booster.onEffectStart += boostStarted;
         booster.onEffectStop += boostStopped;
 
-        camouflage = GetComponent<PlayerCamouflage>();
+        camouflage = GetComponentInChildren<PlayerCamouflage>();
 
         m_Animator = gameObject.GetComponent<Animator>();
         moveBy = Vector3.zero;
